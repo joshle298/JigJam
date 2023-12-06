@@ -23,6 +23,8 @@ let currTxt = "" //current content of text being edited
 
 let layers = [] //array for layers with graphics
 
+let creatorName = "Kaitlyn Zou" //temporary var for user input name
+
 function preload(){
   //load images into array
   for (let i=0; i<7; i++) {
@@ -93,7 +95,7 @@ function draw() {
         mouseIsPressed = false
         
         temp = createGraphics(width + gridSize, height + gridSize)
-        temp.content = new Sticky(stickyCols[i],width/2-50-offsetX,height/2-50-offsetY,100)
+        temp.content = new Sticky(stickyCols[i],width/2-50-offsetX,height/2-50-offsetY,100,creatorName)
         temp.content.txtInput.style.position = "fixed"
         temp.content.txtInput.style.zIndex = String(i)
         console.log(temp.content.txtInput.style.zIndex)
@@ -378,7 +380,7 @@ class Line{
         this.resizing2 = true
       
         //delete line
-      } else if(dist(mouseX,mouseY,Math.max(this.x1,this.x2)+20+offsetX,Math.min(this.y1,this.y2)-20+offsetY) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving){
+      } else if(dist(mouseX,mouseY,Math.max(this.x1,this.x2)+20+offsetX,Math.min(this.y1,this.y2)-20+offsetY) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving || keyIsDown(BACKSPACE)){
         return true
 
         //decrease font size
@@ -545,7 +547,7 @@ class Shape{
         this.resizing = true
       
         //delete shape
-      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving){
+      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving || keyIsDown(BACKSPACE)){
         return true
         
         //move shape
@@ -598,12 +600,13 @@ class Shape{
 
 //sticky note class
 class Sticky{
-  constructor(col,x,y,s){
+  constructor(col,x,y,s,name){
     this.col = col
     this.txt = ""
     this.x = x
     this.y = y
     this.s = s
+    this.name = name
     
     this.selected = true //start with it selecting
     currSelecting = true
@@ -622,7 +625,14 @@ class Sticky{
     //sticky text
     fill(0)
     textWrap(CHAR)
-    text(this.txt,this.x+offsetX+5,this.y+offsetY+5,this.s-10,this.s-10)
+    text(this.txt,this.x+offsetX+5,this.y+offsetY+5,this.s-10,this.s-20)
+
+    //creator name
+    push()
+    fill(80)
+    textSize(10)
+    text(this.name,this.x+offsetX+5,this.y+offsetY+this.s-14,this.s-10,this.s-10)
+    pop()
     
     //position text input 
     this.txtInput.position(this.x+offsetX-3,this.y+offsetY+this.s+12)
@@ -691,7 +701,7 @@ class Sticky{
       }
       
     }
-    this.s = constrain(this.s,20,width)
+    this.s = constrain(this.s,100,width)
   }
   
   //selecting this sticky
@@ -759,7 +769,7 @@ class Sticker{
         this.resizing = true
         
         //delete sticker
-      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving){
+      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving || keyIsDown(BACKSPACE)){
         return true
         
         //start moving
@@ -923,8 +933,8 @@ class TextBox{
         }
       }
     }
-    this.w = constrain(this.w,20,width)
-    this.h = constrain(this.h,20,width)
+    this.w = constrain(this.w,50,width)
+    this.h = constrain(this.h,25,width)
     this.txtSz = constrain(this.txtSz,8,40)
   }
   
