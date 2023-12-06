@@ -44,9 +44,11 @@ let showFoodStickers = true;
 let showDoodlesStickers = false;
 let showReactionsStickers = false;
 let showWordsStickers = false;
+let creatorName = "Kaitlyn Zou" //temporary var for user input name
 
 function preload(){
   //load food images into array
+
   for (let i=0; i<7; i++) {
     let filename = "stickers/food/" + nf(i) + ".png"
     foodStickerImgs.push(loadImage(filename))
@@ -237,7 +239,7 @@ function draw() {
         mouseIsPressed = false
         
         temp = createGraphics(width + gridSize, height + gridSize)
-        temp.content = new Sticky(stickyCols[i],width/2-50-offsetX,height/2-50-offsetY,100)
+        temp.content = new Sticky(stickyCols[i],width/2-50-offsetX,height/2-50-offsetY,100,creatorName)
         temp.content.txtInput.style.position = "fixed"
         temp.content.txtInput.style.zIndex = String(i)
         console.log(temp.content.txtInput.style.zIndex)
@@ -398,7 +400,71 @@ function draw() {
         stickerOffset2 += 10
 
       }
+      tabOffset2 += 55
+    }
+  }
+
+  fill("yellow")
+  rect(0,100,50)
       
+  if(mouseX>=0 && mouseX<=50 && mouseY>=100 && mouseY<=150 && mouseIsPressed && !currSelecting){
+    mouseIsPressed = false
+    
+    temp = createGraphics(width + gridSize, height + gridSize)
+    temp.content = new TextBox(width/2-50-offsetX,height/2-50-offsetY,200,100)
+    layers.push(temp)
+
+    showStickies = false
+    showStickers = false
+    showShapes = false
+    handMode = false
+  }
+
+  fill("orange")
+  rect(0,150,50)
+
+  //shapes toolbar
+  if(showShapes){
+    fill("white")
+    rect(50,150,60,(50*4)+(5*4)+5)
+    
+    tabOffset2 = 0
+    
+    //show shapes, add new shape when picked
+    for(let i=0; i<4; i++){
+
+      push()
+      noFill()
+      strokeWeight(2)
+      stroke(100)
+      // rectMode(CENTER)
+      // rect(80,180+tabOffset2,50)
+      if(i==0){
+        ellipse(80,180+tabOffset2,40)
+      } else if(i==1){
+        rectMode(CENTER)
+        rect(80,180+tabOffset2,35)
+      } else if(i==2){
+        triangle(80,180+tabOffset2-20, 80+20,180+tabOffset2+15, 80-20,180+tabOffset2+15)
+      } else if(i==3){
+        push()
+        translate(80,180+tabOffset2)
+        rotate(radians(45))
+        rectMode(CENTER)
+        rect(0,0,32)
+        pop()
+      }
+      pop()
+
+      if(mouseX>=55 && mouseX<=55+50 && mouseY>=155+tabOffset2 && mouseY<=155+tabOffset2+50 && mouseIsPressed && !currSelecting){
+        mouseIsPressed = false
+        
+        temp = createGraphics(width + gridSize, height + gridSize)
+        temp.content = new Shape(i,round(random(0,shapeCols.length-1)),width/2-50-offsetX,height/2-50-offsetY,100)
+        layers.push(temp)
+      }
+
+      tabOffset2 += 55
     }
 
     if(showReactionsStickers){
@@ -513,7 +579,6 @@ function draw() {
     
   }
 
-
   //5 TEXT TOOL
   image(textTool, 10, 450, 80, 80)
       
@@ -522,6 +587,7 @@ function draw() {
     
     temp = createGraphics(width + gridSize, height + gridSize)
     temp.content = new TextBox(width/2-50-offsetX,height/2-50-offsetY,200,100)
+
     layers.push(temp)
 
     showStickies = false
@@ -529,7 +595,6 @@ function draw() {
     showShapes = false
     handMode = false
   }
-
   
  //6 SELECT TOOL
   image(selectTool, 10, 540, 80, 80)
@@ -704,7 +769,7 @@ class Line{
         this.resizing2 = true
       
         //delete line
-      } else if(dist(mouseX,mouseY,Math.max(this.x1,this.x2)+20+offsetX,Math.min(this.y1,this.y2)-20+offsetY) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving){
+      } else if(dist(mouseX,mouseY,Math.max(this.x1,this.x2)+20+offsetX,Math.min(this.y1,this.y2)-20+offsetY) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving || keyIsDown(BACKSPACE)){
         return true
 
         //decrease font size
@@ -871,7 +936,7 @@ class Shape{
         this.resizing = true
       
         //delete shape
-      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving){
+      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving || keyIsDown(BACKSPACE)){
         return true
         
         //move shape
@@ -924,12 +989,13 @@ class Shape{
 
 //sticky note class
 class Sticky{
-  constructor(col,x,y,s){
+  constructor(col,x,y,s,name){
     this.col = col
     this.txt = ""
     this.x = x
     this.y = y
     this.s = s
+    this.name = name
     
     this.selected = true //start with it selecting
     currSelecting = true
@@ -948,7 +1014,14 @@ class Sticky{
     //sticky text
     fill(0)
     textWrap(CHAR)
-    text(this.txt,this.x+offsetX+5,this.y+offsetY+5,this.s-10,this.s-10)
+    text(this.txt,this.x+offsetX+5,this.y+offsetY+5,this.s-10,this.s-20)
+
+    //creator name
+    push()
+    fill(80)
+    textSize(10)
+    text(this.name,this.x+offsetX+5,this.y+offsetY+this.s-14,this.s-10,this.s-10)
+    pop()
     
     //position text input 
     this.txtInput.position(this.x+offsetX-3,this.y+offsetY+this.s+12)
@@ -1017,7 +1090,7 @@ class Sticky{
       }
       
     }
-    this.s = constrain(this.s,20,width)
+    this.s = constrain(this.s,100,width)
   }
   
   //selecting this sticky
@@ -1099,7 +1172,7 @@ class Sticker{
         this.resizing = true
         
         //delete sticker
-      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving){
+      } else if(dist(mouseX,mouseY,this.x+offsetX+this.s,this.y+offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving || keyIsDown(BACKSPACE)){
         return true
         
         //start moving
@@ -1263,8 +1336,9 @@ class TextBox{
         }
       }
     }
-    this.w = constrain(this.w,20,width)
-    this.h = constrain(this.h,20,width)
+
+    this.w = constrain(this.w,50,width)
+    this.h = constrain(this.h,25,width)
     this.txtSz = constrain(this.txtSz,8,40)
   }
   
