@@ -27,7 +27,8 @@ let stickerOffset2 = 0 //padding in sticker toolbar, column 2
 
 let currTxt = "" //current content of text being edited
 
-let layers = [] //array for layers with graphics
+let layers = new Map(); // map for layers with graphics
+let users = [] //array for users
 
 let category;
 
@@ -47,6 +48,64 @@ let showWordsStickers = false;
 let creatorName = "Kaitlyn Zou" //temporary var for user input name
 
 function preload() {
+  // send messages to all other clients in the canvas
+  socket = io();
+
+  // tell all other users that we have joined the canvas
+  socket.emit('new_user', {
+    // x: x,
+    // y: y,
+    // color: currentColor
+  });
+
+    // listen for any new users that may have joined
+    socket.on('new_user', function(message) {
+      console.log("A new user has joined!");
+      console.log(message);
+
+      // store the newly joined user in our object
+      users[message.id] = message;
+  });
+
+    // listen for all previous users
+    socket.on('all_previous_users', function(message) {
+      console.log("Got all previous users!");
+      console.log(message);
+
+      // store these users
+      for (let id in message) {
+          users[id] = message[id];
+      }
+      console.log(users);
+  });
+
+  // listen for all layers in the canvas
+  socket.on('all_previous_layers', function(message) {
+    console.log("Got all previous layers!");
+    console.log(message);
+
+    for(let layer in message) {
+      console.log(layer);
+      layers.set(layer.uniqueID, layer.layer);
+    }
+    // // store these layers
+    // for (let id in message) {
+    //     layers[id] = message[id];
+    // }
+
+    console.log(layers);
+  });
+
+  // listen for any new layers that may have been added
+  socket.on('new_layer', function(message) {
+    console.log("A new layer has been added!");
+
+    // store the newly added layer in our object
+    layers[message.uniqueID] = message.layer;
+
+    console.log(layers);
+  });
+  
   //load food images into array
 
   for (let i = 0; i < 7; i++) {
@@ -81,6 +140,8 @@ function preload() {
   stickyTool = loadImage("icons/stickyTool.png");
   textTool = loadImage("icons/textTool.png");
 
+
+
 }
 
 function setup() {
@@ -100,31 +161,32 @@ function setup() {
 function draw() {
   background(255);
 
-  // draw the visible portion of the grid from the buffer
+  // Draw the visible portion of the grid from the buffer
   image(gridBuffer, offsetX % gridSize - gridSize, offsetY % gridSize - gridSize);
 
-  //go over all layers and display
-  for (let i = 0; i < layers.length; i++) {
-    image(layers[i], offsetX % gridSize - gridSize, offsetY % gridSize - gridSize)
+  // render each layer
+  layers.forEach((layer, id) => {
+    image(layer, offsetX % gridSize - gridSize, offsetY % gridSize - gridSize);
 
-    let deleteThis = layers[i].content.display()
+    let deleteThis = layer.content.display();
 
-    //if user deletes the item, delete the layer
+    // If user deletes the item, delete the layer from the map
     if (deleteThis) {
-      layers.splice(i, 1)
-      currSelecting = false
+      layers.delete(id);
+      currSelecting = false;
     }
-  }
+  });
 
-  //go over all layers in reverse and call selecting and unselecting
-  for (let i = layers.length - 1; i >= 0; i--) {
-    layers[i].content.unselecting()
+  // To go over all layers in reverse for selecting and unselecting,
+  // we convert the Map values to an array and then reverse it
+  Array.from(layers.values()).reverse().forEach(layer => {
+    layer.content.unselecting();
 
-    //if not selecting something & not dragging canvas, allow to select something else
+    // If not selecting something & not dragging canvas, allow to select something else
     if (!currSelecting && !handMode) {
-      layers[i].content.selecting()
+      layer.content.selecting();
     }
-  }
+  });
 
   //HOME BUTTON
   fill('#f2f2f2')
@@ -211,7 +273,12 @@ function draw() {
 
         temp = createGraphics(width + gridSize, height + gridSize)
         temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
-        layers.push(temp)
+        // Generate a unique ID for the new layer
+        let uniqueID = Math.floor(Date.now() + Math.random());
+        layers.set(uniqueID, temp);
+        
+        // tell all other users that we have added a new layer
+        socket.emit('new_layer', {uniqueID: uniqueID, layer: temp.content});
       }
 
       // tabOffset2 += 55
