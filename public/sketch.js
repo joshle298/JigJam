@@ -97,11 +97,19 @@ function preload() {
   });
 
   // listen for any new layers that may have been added
-  socket.on('new_layer', function(message) {
+  socket.on('new_layer', function(msg) {
     console.log("A new layer has been added!");
-
+    console.log(msg);
+    newSticky = createGraphics(width + gridSize, height + gridSize);
+    
+    // Assuming msg.col is an array [r, g, b]
+    let col = color(msg.layer.col[0], msg.layer.col[1], msg.layer.col[2]);
+    newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "Kaitlyn");
+    // use the info to add new stickies to canvas
+    // temp = createGraphics(width + gridSize, height + gridSize)
+    // temp.content = new Shape(color(msg.id, msg.col.levels[0], msg.col.levels[1], msg.col.levels[2]), msg.x, msg.y, msg.s)
     // store the newly added layer in our object
-    layers[message.uniqueID] = message.layer;
+    layers.set(msg.uniqueID, newSticky);
 
     console.log(layers);
   });
@@ -222,7 +230,8 @@ function draw() {
 
     temp = createGraphics(width + gridSize, height + gridSize)
     temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50)
-    layers.push(temp)
+    let uniqueID = Math.floor(Date.now() + Math.random());
+    layers.set(uniqueID, temp);
 
     showStickies = false
     showStickers = false
@@ -273,12 +282,19 @@ function draw() {
 
         temp = createGraphics(width + gridSize, height + gridSize)
         temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
+        
         // Generate a unique ID for the new layer
         let uniqueID = Math.floor(Date.now() + Math.random());
         layers.set(uniqueID, temp);
         
-        // tell all other users that we have added a new layer
-        socket.emit('new_layer', {uniqueID: uniqueID, layer: temp.content});
+        // // tell all other users that we have added a new layer
+        // socket.emit('new_layer', {uniqueID: uniqueID, layer:  {
+        //   id: temp.content.id,
+        //   col: temp.content.col,
+        //   x: temp.content.x,
+        //   y: temp.content.y,
+        //   s: temp.content.s
+        // }});
       }
 
       // tabOffset2 += 55
@@ -310,7 +326,19 @@ function draw() {
         // temp.content.txtInput.style.position = "fixed"
         // temp.content.txtInput.style.zIndex = String(i)
         // console.log(temp.content.txtInput.style.zIndex)
-        layers.push(temp)
+
+        let uniqueID = Math.floor(Date.now() + Math.random());
+        layers.set(uniqueID, temp);
+
+        socket.emit('new_layer', {
+          uniqueID: uniqueID, 
+          layer: {
+            col: [temp.content.col.levels[0], temp.content.col.levels[1], temp.content.col.levels[2]], // Convert the color to an RGB array
+            x: temp.content.x,
+            y: temp.content.y,
+            s: temp.content.s
+          }
+        });        
       }
 
       tabOffset2 += 70
@@ -414,7 +442,8 @@ function draw() {
             mouseIsPressed = false
             temp = createGraphics(width + gridSize, height + gridSize)
             temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            layers.push(temp)
+            let uniqueID = Math.floor(Date.now() + Math.random());
+            layers.set(uniqueID, temp);
           }
         } else {
           image(foodStickerImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
@@ -423,7 +452,8 @@ function draw() {
 
             temp = createGraphics(width + gridSize, height + gridSize)
             temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            layers.push(temp)
+            let uniqueID = Math.floor(Date.now() + Math.random());
+            layers.set(uniqueID, temp);
           }
         }
 
@@ -448,7 +478,8 @@ function draw() {
 
             temp = createGraphics(width + gridSize, height + gridSize)
             temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            layers.push(temp)
+            let uniqueID = Math.floor(Date.now() + Math.random());
+            layers.set(uniqueID, temp);
           }
         } else {
           image(doodlesStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
@@ -457,7 +488,8 @@ function draw() {
 
             temp = createGraphics(width + gridSize, height + gridSize)
             temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            layers.push(temp)
+            let uniqueID = Math.floor(Date.now() + Math.random());
+            layers.set(uniqueID, temp);
           }
         }
 
@@ -485,7 +517,8 @@ function draw() {
 
           temp = createGraphics(width + gridSize, height + gridSize)
           temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          layers.push(temp)
+          let uniqueID = Math.floor(Date.now() + Math.random());
+          layers.set(uniqueID, temp);
         }
       } else {
         image(reactionsStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
@@ -494,7 +527,8 @@ function draw() {
 
           temp = createGraphics(width + gridSize, height + gridSize)
           temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          layers.push(temp)
+          let uniqueID = Math.floor(Date.now() + Math.random());
+          layers.set(uniqueID, temp);
         }
 
       }
@@ -519,7 +553,8 @@ function draw() {
 
           temp = createGraphics(width + gridSize, height + gridSize)
           temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          layers.push(temp)
+          let uniqueID = Math.floor(Date.now() + Math.random());
+          layers.set(uniqueID, temp);
         }
       } else {
         image(wordsStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
@@ -528,7 +563,8 @@ function draw() {
 
           temp = createGraphics(width + gridSize, height + gridSize)
           temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          layers.push(temp)
+          let uniqueID = Math.floor(Date.now() + Math.random());
+          layers.set(uniqueID, temp);
         }
 
       }
@@ -590,7 +626,8 @@ function draw() {
     temp = createGraphics(width + gridSize, height + gridSize)
     temp.content = new TextBox(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100)
 
-    layers.push(temp)
+    let uniqueID = Math.floor(Date.now() + Math.random());
+    layers.set(uniqueID, temp);
 
     showStickies = false
     showStickers = false
