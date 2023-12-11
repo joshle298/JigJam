@@ -87,8 +87,10 @@ io.on('connection', function(socket) {
     // listen for layer movements
     socket.on('move_layer', function(msg) {
         console.log("a layer has been moved by one of our clients: ", msg);
+        console.log(layers);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
+        console.log(msg.id);
         layer.x = msg.x;
         layer.y = msg.y;
 

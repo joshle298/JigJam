@@ -104,7 +104,9 @@ function preload() {
     
     // Assuming msg.col is an array [r, g, b]
     let col = color(msg.layer.col[0], msg.layer.col[1], msg.layer.col[2]);
-    newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "Kaitlyn");
+    newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "other", msg.uniqueID);
+    newSticky.content.selected = false;
+    currSelecting = false;
     // use the info to add new stickies to canvas
     // temp = createGraphics(width + gridSize, height + gridSize)
     // temp.content = new Shape(color(msg.id, msg.col.levels[0], msg.col.levels[1], msg.col.levels[2]), msg.x, msg.y, msg.s)
@@ -332,13 +334,12 @@ function draw() {
       if (mouseX >= 120 && mouseX <= 120 + 57 && mouseY >= 285 + tabOffset2 && mouseY <= 285 + tabOffset2 + 57 && mouseIsPressed && !currSelecting) {
         mouseIsPressed = false
 
+        let uniqueID = Math.floor(Date.now() + Math.random());
         temp = createGraphics(width + gridSize, height + gridSize)
-        temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName)
+        temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName, uniqueID);
         // temp.content.txtInput.style.position = "fixed"
         // temp.content.txtInput.style.zIndex = String(i)
         // console.log(temp.content.txtInput.style.zIndex)
-
-        let uniqueID = Math.floor(Date.now() + Math.random());
         layers.set(uniqueID, temp);
         
         temp.content.id = uniqueID;
@@ -1041,7 +1042,7 @@ class Shape {
 
 //sticky note class
 class Sticky {
-  constructor(col, x, y, s, name) {
+  constructor(col, x, y, s, name, id) {
     this.col = col
     this.txt = ""
     this.x = x
@@ -1056,6 +1057,8 @@ class Sticky {
     this.moving = false
 
     this.txtInput = createInput("") //text input
+
+    this.id = id;
   }
 
   display() {
