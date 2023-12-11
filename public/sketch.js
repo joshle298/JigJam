@@ -113,6 +113,17 @@ function preload() {
 
     console.log(layers);
   });
+
+  // listen for movement of layers: need keyvalue, x, y
+  socket.on('move_layer', function(msg) {
+    console.log("a layer is being moved");
+    console.log(msg);
+
+    // update the layer in our layers map
+    let layer = layers.get(msg.id);
+    layer.content.x = msg.x;
+    layer.content.y = msg.y;
+  });
   
   //load food images into array
 
@@ -329,6 +340,8 @@ function draw() {
 
         let uniqueID = Math.floor(Date.now() + Math.random());
         layers.set(uniqueID, temp);
+        
+        temp.content.id = uniqueID;
 
         socket.emit('new_layer', {
           uniqueID: uniqueID, 
@@ -1126,6 +1139,13 @@ class Sticky {
         if (!mouseIsPressed) {
           this.moving = false
         }
+
+        // emit the sticky's new position
+        socket.emit('move_layer', {
+          x: this.x,
+          y: this.y,
+          id: this.id
+        });
       }
 
     }
