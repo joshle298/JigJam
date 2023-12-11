@@ -83,4 +83,16 @@ io.on('connection', function(socket) {
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('new_layer', msg);
     });
+
+    // listen for layer movements
+    socket.on('move_layer', function(msg) {
+        console.log("a layer has been moved by one of our clients: ", msg);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        layer.x = msg.x;
+        layer.y = msg.y;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('move_layer', msg);
+    });
 });
