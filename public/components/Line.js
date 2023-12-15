@@ -14,8 +14,6 @@ class Line {
       this.resizing1 = false
       this.resizing2 = false
       this.moving = false
-  
-      // this.txtInput = createInput("") //text input
     }
   
     display() {

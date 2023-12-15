@@ -77,6 +77,12 @@ class Sticky {
         } else if (dist(mouseX, mouseY, this.x + offsetX + this.s, this.y + offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving) {
           this.txtInput.hide()
           currTxt = ""
+
+          // delete sticky
+          socket.emit('delete_layer', {
+            id: this.id
+          });
+
           return true
   
           //move sticky
@@ -92,6 +98,13 @@ class Sticky {
           } else {
             this.s = mouseY - this.y
           }
+
+          // emit the sticky's new position
+          socket.emit('resize_layer', {
+            s: this.s,
+            id: this.id
+          });
+
           if (!mouseIsPressed) {
             this.resizing = false
           }
