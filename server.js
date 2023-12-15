@@ -74,7 +74,7 @@ io.on('connection', function(socket) {
         // socket.broadcast.emit('new_player', allPlayers[myId]);
     });
 
-    // listen for new layers that are added
+    // listen for new stickies that are added
     socket.on('new_sticky', function(msg) {
         console.log("a new sticky has been added by one of our clients: ", msg);
         // store new layer in our layers array
@@ -83,6 +83,9 @@ io.on('connection', function(socket) {
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('new_sticky', msg);
     });
+
+    // listen for new stickers that are added
+    
 
     // listen for layer movements
     socket.on('move_layer', function(msg) {
@@ -120,5 +123,18 @@ io.on('connection', function(socket) {
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('delete_layer', msg);
+    });
+
+    // listen for text changes
+    socket.on('change_text', function(msg) {
+        console.log("a text has been changed by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.txt = msg.txt;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_text', msg);
     });
 });

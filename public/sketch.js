@@ -96,7 +96,7 @@ function preload() {
     console.log(layers);
   });
 
-  // listen for any new layers that may have been added
+  // listen for any new stickers that may have been added
   socket.on('new_sticky', function(msg) {
     console.log("A new sticky has been added!");
     console.log(msg);
@@ -106,12 +106,26 @@ function preload() {
     let col = color(msg.layer.col[0], msg.layer.col[1], msg.layer.col[2]);
     newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "other", msg.uniqueID);
     newSticky.content.selected = false;
+    // newSticky.content.txtInput.hide()
+    newSticky.content.txtInput.hide()
     currSelecting = false;
-    // use the info to add new stickies to canvas
-    // temp = createGraphics(width + gridSize, height + gridSize)
-    // temp.content = new Shape(color(msg.id, msg.col.levels[0], msg.col.levels[1], msg.col.levels[2]), msg.x, msg.y, msg.s)
-    // store the newly added layer in our object
+
     layers.set(msg.uniqueID, newSticky);
+
+    console.log(layers);
+  });
+
+  // listen for any new stickers that may have been added
+  socket.on('new_sticker', function(msg) {
+    console.log("A new sticker has been added!");
+    console.log(msg);
+    newSticker = createGraphics(width + gridSize, height + gridSize);
+    
+    newSticker.content = new Sticker(msg.id, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category);
+    newSticker.content.selected = false;
+    currSelecting = false;
+
+    layers.set(msg.uniqueID, newSticker);
 
     console.log(layers);
   });
@@ -144,6 +158,13 @@ function preload() {
 
     // delete the layer from our layers map
     layers.delete(msg.id);
+  });
+
+  // listen for text edits
+  socket.on('change_text', function(msg) {
+    console.log("a text is being edited");
+    console.log(msg);
+    layers.get(msg.id).content.txt = msg.txt;
   });
 
   //load food images into array
@@ -209,7 +230,6 @@ function draw() {
     image(layer, offsetX % gridSize - gridSize, offsetY % gridSize - gridSize);
 
     let deleteThis = layer.content.display();
-
     // If user deletes the item, delete the layer from the map
     if (deleteThis) {
       layers.delete(id);

@@ -1,3 +1,5 @@
+let debounceTimer;
+
 //sticky note class
 class Sticky {
     constructor(col, x, y, s, name, id) {
@@ -14,7 +16,8 @@ class Sticky {
       this.resizing = false
       this.moving = false
   
-      this.txtInput = createInput("") //text input
+      this.txtInput = createInput() //text input
+      this.txtInput.input(() => handleTextInput());
   
       this.id = id;
     }
@@ -63,8 +66,17 @@ class Sticky {
         ellipse(this.x + offsetX + this.s, this.y + offsetY + this.s, 20)
         pop()
   
+
+        // emit the sticky's new text only when the user is done typing
         this.txtInput.input(changeText) //get text from input
         this.txt = currTxt
+
+        this.txtInput.value(this.txt)
+
+        socket.emit('change_text', {
+          txt: this.txt,
+          id: this.id
+        });
   
         //start resizing
         if (dist(mouseX, mouseY, this.x + offsetX + this.s, this.y + offsetY + this.s) <= 10 && mouseIsPressed && !this.moving) {
@@ -146,4 +158,15 @@ class Sticky {
         currTxt = ""
       }
     }
+  }
+
+  function handleTextInput() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      this.txt = this.txtInput.value();
+      socket.emit('change_text', {
+        txt: this.txt,
+        id: this.id
+      });
+    }, 500); // Waits for 500 ms of no input before emitting
   }
