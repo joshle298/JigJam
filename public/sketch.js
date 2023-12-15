@@ -97,8 +97,8 @@ function preload() {
   });
 
   // listen for any new layers that may have been added
-  socket.on('new_layer', function(msg) {
-    console.log("A new layer has been added!");
+  socket.on('new_sticky', function(msg) {
+    console.log("A new sticky has been added!");
     console.log(msg);
     newSticky = createGraphics(width + gridSize, height + gridSize);
     
@@ -126,7 +126,26 @@ function preload() {
     layer.content.x = msg.x;
     layer.content.y = msg.y;
   });
+
+  // listen for resizing of layers: need keyvalue, s
+  socket.on('resize_layer', function(msg) {
+    console.log("a layer is being resized");
+    console.log(msg);
+
+    // update the layer in our layers map
+    let layer = layers.get(msg.id);
+    layer.content.s = msg.s;
+  });
   
+  // listen for layer deletions
+  socket.on('delete_layer', function(msg) {
+    console.log("a layer is being deleted");
+    console.log(msg);
+
+    // delete the layer from our layers map
+    layers.delete(msg.id);
+  });
+
   //load food images into array
 
   for (let i = 0; i < 7; i++) {
@@ -344,7 +363,7 @@ function draw() {
         
         temp.content.id = uniqueID;
 
-        socket.emit('new_layer', {
+        socket.emit('new_sticky', {
           uniqueID: uniqueID, 
           layer: {
             col: [temp.content.col.levels[0], temp.content.col.levels[1], temp.content.col.levels[2]], // Convert the color to an RGB array

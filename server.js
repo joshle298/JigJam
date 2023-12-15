@@ -75,13 +75,13 @@ io.on('connection', function(socket) {
     });
 
     // listen for new layers that are added
-    socket.on('new_layer', function(msg) {
-        console.log("a new layer has been added by one of our clients: ", msg);
+    socket.on('new_sticky', function(msg) {
+        console.log("a new sticky has been added by one of our clients: ", msg);
         // store new layer in our layers array
         layers.set(msg.uniqueID, msg.layer);
 
         // send this out to all other clients along with the layer id
-        socket.broadcast.emit('new_layer', msg);
+        socket.broadcast.emit('new_sticky', msg);
     });
 
     // listen for layer movements
@@ -96,5 +96,29 @@ io.on('connection', function(socket) {
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_layer', msg);
+    });
+
+    // listen for layer resizes
+    socket.on('resize_layer', function(msg) {
+        console.log("a layer has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.s = msg.s;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('resize_layer', msg);
+    });
+
+    // listen for layer deletions
+    socket.on('delete_layer', function(msg) {
+        console.log("a layer has been deleted by one of our clients: ", msg);
+        console.log(layers);
+        // delete the layer in our layers array
+        layers.delete(msg.id);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('delete_layer', msg);
     });
 });
