@@ -1,3 +1,4 @@
+//layout adjustment
 let record;
 let needle;
 let recordImgs =[]
@@ -36,17 +37,19 @@ function draw(){
     background(250)
 
     push()
+    fill("#f2f2f2")
+    rect(200,70,300,300,9)
 
     imageMode(CENTER)
-    image(record,200,200,200,200)
+    image(record,350,240,200,200)
     push()
-    translate(200,200)
+    translate(350,240)
     rotate(radians(recordRot))
     image(recordImgs[currTrack-1],0,0,200,200)
     pop()
 
     push()
-    translate(300,150)
+    translate(460,210)
     rotate(radians(needleRot))
     image(needle,0,0,200,200)
     pop()
@@ -54,17 +57,20 @@ function draw(){
     pop()
 
     fill(0,216,221)
-    rect(0,0,50,50)
+    rect(210,80,35,35,9)
+
     fill(226,51,193)
-    rect(50,0,50,50)
+    rect(255,80,35,35,9)
+
     fill(255,201,67)
-    rect(100,0,50,50)
+    rect(300,80,35,35,9)
+
     fill(178,97,242)
-    rect(150,0,50,50)
+    rect(345,80,35,35,9)
 
     push()
     fill(0)
-    ellipse(375,25,50)
+    ellipse(460,110,50)
     stroke(255)
     noFill()
     rectMode(CENTER)
@@ -72,14 +78,11 @@ function draw(){
     playTrack = tracks[currTrack-1]
     
     if(playing){
-        rect(375,25,15)
+        rect(460, 110, 15)
         recordRot += recordSpeed
         if(needleRot <= 25){
             needleRot++
         }
-
-        fill(0)
-        text("currently playing track " + currTrack, 50, 100)
 
         if(currTrack != 4){
             if(!tracks[currTrack-1].isPlaying()){
@@ -94,14 +97,14 @@ function draw(){
         }
 
     } else {
-        triangle(370,15, 385,25, 370,35)
+        triangle(455, 100, 470, 110, 455, 120)
         if(needleRot >= 0){
             needleRot--
         }
     }
     pop()
 
-    if(mouseX>=0 && mouseX<=50 && mouseY>=0 && mouseY<=50 && mouseIsPressed){
+    if(mouseX>=210 && mouseX<=210+35 && mouseY>=80 && mouseY<=80+35 && mouseIsPressed){
         mouseIsPressed = false
         currTrack = 1
         playing = true
@@ -114,7 +117,7 @@ function draw(){
         tracks[0].play()
     }
 
-    if(mouseX>=50 && mouseX<=100 && mouseY>=0 && mouseY<=50 && mouseIsPressed){
+    if(mouseX>=255 && mouseX<=255+35 && mouseY>=80 && mouseY<=80+35 && mouseIsPressed){
         mouseIsPressed = false
         currTrack = 2
         playing = true
@@ -127,7 +130,7 @@ function draw(){
         tracks[1].play()
     }
 
-    if(mouseX>=100 && mouseX<=150 && mouseY>=0 && mouseY<=50 && mouseIsPressed){
+    if(mouseX>=300 && mouseX<=300+35 && mouseY>=80 && mouseY<=80+35 && mouseIsPressed){
         mouseIsPressed = false
         currTrack = 3
         playing = true
@@ -140,7 +143,7 @@ function draw(){
         tracks[2].play()
     }
 
-    if(mouseX>=150 && mouseX<=200 && mouseY>=0 && mouseY<=50 && mouseIsPressed){
+    if(mouseX>=345 && mouseX<=345+35 && mouseY>=80 && mouseY<=80+35 && mouseIsPressed){
         mouseIsPressed = false
         currTrack = 4
         playing = true
@@ -153,7 +156,7 @@ function draw(){
         tracks[3].play()
     }
 
-    if(dist(mouseX,mouseY, 375,25)<=25 && mouseIsPressed){
+    if(dist(mouseX,mouseY, 460,110)<=25 && mouseIsPressed){
         mouseIsPressed = false
         if(playing){
             tracks[0].stop()
