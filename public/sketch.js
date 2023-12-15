@@ -120,8 +120,7 @@ function preload() {
     console.log("A new sticker has been added!");
     console.log(msg);
     newSticker = createGraphics(width + gridSize, height + gridSize);
-    
-    newSticker.content = new Sticker(msg.id, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category);
+    newSticker.content = new Sticker(msg.layer.id, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category);
     newSticker.content.selected = false;
     currSelecting = false;
 
@@ -336,7 +335,7 @@ function draw() {
         temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
         
         // Generate a unique ID for the new layer
-        let uniqueID = Math.floor(Date.now() + Math.random());
+        let uniqueID = createUniqueID();
         layers.set(uniqueID, temp);
         
         // // tell all other users that we have added a new layer
@@ -416,23 +415,6 @@ function draw() {
     strokeWeight(1)
     rect(100, 359, 100 + 90 + 35, (50 * 6) + (5 * 6) + 25, 0, 9, 9, 0)
 
-    // if (category == 'foods') {
-    //   foodTabColor = selectedTabColor
-    //   doodlesTabColor = unselectedTabColor
-    //   reactionsTabColor = unselectedTabColor
-    //   wordsTabColor = unselectedTabColor
-    // } else if (category == 'doodles') {
-    //   foodTabColor = unselectedTabColor
-    //   doodlesTabColor = selectedTabColor
-    //   reactionsTabColor = unselectedTabColor
-    //   wordsTabColor = unselectedTabColor
-    // } else if (category == 'reactions') {
-    //   foodTabColor = unselectedTabColor
-    //   doodlesTabColor = selectedTabColor
-    //   reactionsTabColor = unselectedTabColor
-    //   wordsTabColor = unselectedTabColor
-    // }
-
     //food tab
     fill(selectedTabColor)
     rect(200 + 90, 359, 35, 88.75, 0, 9, 0, 0)
@@ -493,10 +475,12 @@ function draw() {
           image(foodStickerImgs[i], 110, 370 + tabOffset2 + stickerOffset, 75, 75)
           if (mouseX >= 110 && mouseX <= 110 + 75 && mouseY >= 370 + tabOffset2 + stickerOffset && mouseY <= 370 + tabOffset2 + stickerOffset + 75 && mouseIsPressed && !currSelecting) {
             mouseIsPressed = false
-            temp = createGraphics(width + gridSize, height + gridSize)
-            temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            let uniqueID = Math.floor(Date.now() + Math.random());
-            layers.set(uniqueID, temp);
+            createSticker(i, category);
+
+            // temp = createGraphics(width + gridSize, height + gridSize)
+            // temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
+            // let uniqueID = Math.floor(Date.now() + Math.random());
+            // layers.set(uniqueID, temp);
           }
         } else {
           image(foodStickerImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
@@ -801,4 +785,27 @@ function mouseDragged() {
 
 function isMouseWithinCanvas() {
   return mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
+}
+
+function createUniqueID() {
+  return Math.floor(Date.now() + Math.random());
+}
+
+function createSticker(i, category) {
+  temp = createGraphics(width + gridSize, height + gridSize)
+  temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
+  let uniqueID = createUniqueID();
+  layers.set(uniqueID, temp);
+
+  // tell all other users that we have added a new layer
+  socket.emit('new_sticker', {
+    uniqueID: uniqueID, 
+    layer: {
+      id: i,
+      x: temp.content.x,
+      y: temp.content.y,
+      s: temp.content.s,
+      category: category
+    }
+  });
 }
