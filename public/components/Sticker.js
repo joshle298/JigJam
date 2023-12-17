@@ -1,7 +1,7 @@
 //sticker class
 class Sticker {
-    constructor(id, x, y, s, category) {
-      this.id = id
+    constructor(stickerID, x, y, s, category, id) {
+      this.stickerID = stickerID
       this.x = x
       this.y = y
       this.s = s
@@ -11,21 +11,22 @@ class Sticker {
       this.resizing = false
       this.moving = false
   
+      this.id = id
     }
   
     display() {
       //show sticker
       if (this.c == "foods") {
-        image(foodStickerImgs[this.id], this.x + offsetX, this.y + offsetY, this.s, this.s)
+        image(foodStickerImgs[this.stickerID], this.x + offsetX, this.y + offsetY, this.s, this.s)
   
       } else if (this.c == "doodles") {
-        image(doodlesStickersImgs[this.id], this.x + offsetX, this.y + offsetY, this.s, this.s)
+        image(doodlesStickersImgs[this.stickerID], this.x + offsetX, this.y + offsetY, this.s, this.s)
   
       } else if (this.c == "reactions") {
-        image(reactionsStickersImgs[this.id], this.x + offsetX, this.y + offsetY, this.s, this.s)
+        image(reactionsStickersImgs[this.stickerID], this.x + offsetX, this.y + offsetY, this.s, this.s)
   
       } else if (this.c == "words") {
-        image(wordsStickersImgs[this.id], this.x + offsetX, this.y + offsetY, this.s, this.s)
+        image(wordsStickersImgs[this.stickerID], this.x + offsetX, this.y + offsetY, this.s, this.s)
   
       }
   
@@ -57,6 +58,10 @@ class Sticker {
   
           //delete sticker
         } else if (dist(mouseX, mouseY, this.x + offsetX + this.s, this.y + offsetY) <= 10 && mouseIsPressed && !this.resizing && !this.moving || keyIsDown(BACKSPACE)) {
+          // delete sticky
+          socket.emit('delete_layer', {
+            id: this.id
+          });
           return true
   
           //start moving
@@ -72,6 +77,13 @@ class Sticker {
           } else {
             this.s = mouseY - this.y
           }
+
+          // emit the sticky's new position
+          socket.emit('resize_layer', {
+            s: this.s,
+            id: this.id
+          });
+
           if (!mouseIsPressed) {
             this.resizing = false
           }
@@ -84,6 +96,13 @@ class Sticker {
           if (!mouseIsPressed) {
             this.moving = false
           }
+          
+          // emit the sticky's new position
+          socket.emit('move_layer', {
+            x: this.x,
+            y: this.y,
+            id: this.id
+          });
         }
       }
       this.s = constrain(this.s, 20, width)

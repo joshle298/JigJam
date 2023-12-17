@@ -95,7 +95,7 @@ function preload() {
 
     console.log(layers);
   });
-
+  
   // listen for any new stickers that may have been added
   socket.on('new_sticky', function(msg) {
     console.log("A new sticky has been added!");
@@ -120,7 +120,7 @@ function preload() {
     console.log("A new sticker has been added!");
     console.log(msg);
     newSticker = createGraphics(width + gridSize, height + gridSize);
-    newSticker.content = new Sticker(msg.layer.id, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category);
+    newSticker.content = new Sticker(msg.layer.stickerID, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category, msg.uniqueID);
     newSticker.content.selected = false;
     currSelecting = false;
 
@@ -281,7 +281,7 @@ function draw() {
 
     temp = createGraphics(width + gridSize, height + gridSize)
     temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50)
-    let uniqueID = Math.floor(Date.now() + Math.random());
+    let uniqueID = createUniqueID();
     layers.set(uniqueID, temp);
 
     showStickies = false
@@ -372,7 +372,7 @@ function draw() {
       if (mouseX >= 120 && mouseX <= 120 + 57 && mouseY >= 285 + tabOffset2 && mouseY <= 285 + tabOffset2 + 57 && mouseIsPressed && !currSelecting) {
         mouseIsPressed = false
 
-        let uniqueID = Math.floor(Date.now() + Math.random());
+        let uniqueID = createUniqueID();
         temp = createGraphics(width + gridSize, height + gridSize)
         temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName, uniqueID);
         // temp.content.txtInput.style.position = "fixed"
@@ -476,21 +476,12 @@ function draw() {
           if (mouseX >= 110 && mouseX <= 110 + 75 && mouseY >= 370 + tabOffset2 + stickerOffset && mouseY <= 370 + tabOffset2 + stickerOffset + 75 && mouseIsPressed && !currSelecting) {
             mouseIsPressed = false
             createSticker(i, category);
-
-            // temp = createGraphics(width + gridSize, height + gridSize)
-            // temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            // let uniqueID = Math.floor(Date.now() + Math.random());
-            // layers.set(uniqueID, temp);
           }
         } else {
           image(foodStickerImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
           if (mouseX >= 200 && mouseX <= 200 + 75 && mouseY >= 30 + tabOffset3 + stickerOffset2 && mouseY <= 30 + tabOffset3 + stickerOffset2 + 75 && mouseIsPressed && !currSelecting) {
             mouseIsPressed = false
-
-            temp = createGraphics(width + gridSize, height + gridSize)
-            temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            let uniqueID = Math.floor(Date.now() + Math.random());
-            layers.set(uniqueID, temp);
+            createSticker(i, category);
           }
         }
 
@@ -512,21 +503,13 @@ function draw() {
           image(doodlesStickersImgs[i], 110, 370 + tabOffset2 + stickerOffset, 75, 75)
           if (mouseX >= 110 && mouseX <= 110 + 75 && mouseY >= 370 + tabOffset2 + stickerOffset && mouseY <= 370 + tabOffset2 + stickerOffset + 75 && mouseIsPressed && !currSelecting) {
             mouseIsPressed = false
-
-            temp = createGraphics(width + gridSize, height + gridSize)
-            temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            let uniqueID = Math.floor(Date.now() + Math.random());
-            layers.set(uniqueID, temp);
+            createSticker(i, category);
           }
         } else {
           image(doodlesStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
           if (mouseX >= 200 && mouseX <= 200 + 75 && mouseY >= 30 + tabOffset3 + stickerOffset2 && mouseY <= 30 + tabOffset3 + stickerOffset2 + 75 && mouseIsPressed && !currSelecting) {
             mouseIsPressed = false
-
-            temp = createGraphics(width + gridSize, height + gridSize)
-            temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-            let uniqueID = Math.floor(Date.now() + Math.random());
-            layers.set(uniqueID, temp);
+            createSticker(i, category);
           }
         }
 
@@ -551,21 +534,13 @@ function draw() {
         image(reactionsStickersImgs[i], 110, 370 + tabOffset2 + stickerOffset, 75, 75)
         if (mouseX >= 110 && mouseX <= 110 + 75 && mouseY >= 370 + tabOffset2 + stickerOffset && mouseY <= 370 + tabOffset2 + stickerOffset + 75 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
-
-          temp = createGraphics(width + gridSize, height + gridSize)
-          temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          let uniqueID = Math.floor(Date.now() + Math.random());
-          layers.set(uniqueID, temp);
+          createSticker(i, category);
         }
       } else {
         image(reactionsStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
         if (mouseX >= 200 && mouseX <= 200 + 75 && mouseY >= 30 + tabOffset3 + stickerOffset2 && mouseY <= 30 + tabOffset3 + stickerOffset2 + 75 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
-
-          temp = createGraphics(width + gridSize, height + gridSize)
-          temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          let uniqueID = Math.floor(Date.now() + Math.random());
-          layers.set(uniqueID, temp);
+          createSticker(i, category);
         }
 
       }
@@ -587,21 +562,13 @@ function draw() {
         image(wordsStickersImgs[i], 110, 370 + tabOffset2 + stickerOffset, 75, 75)
         if (mouseX >= 110 && mouseX <= 110 + 75 && mouseY >= 370 + tabOffset2 + stickerOffset && mouseY <= 370 + tabOffset2 + stickerOffset + 75 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
-
-          temp = createGraphics(width + gridSize, height + gridSize)
-          temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          let uniqueID = Math.floor(Date.now() + Math.random());
-          layers.set(uniqueID, temp);
+          createSticker(i, category);
         }
       } else {
         image(wordsStickersImgs[i], 200, 30 + tabOffset3 + stickerOffset2, 75, 75)
         if (mouseX >= 200 && mouseX <= 200 + 75 && mouseY >= 30 + tabOffset3 + stickerOffset2 && mouseY <= 30 + tabOffset3 + stickerOffset2 + 75 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
-
-          temp = createGraphics(width + gridSize, height + gridSize)
-          temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
-          let uniqueID = Math.floor(Date.now() + Math.random());
-          layers.set(uniqueID, temp);
+          createSticker(i, category);
         }
 
       }
@@ -663,7 +630,7 @@ function draw() {
     temp = createGraphics(width + gridSize, height + gridSize)
     temp.content = new TextBox(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100)
 
-    let uniqueID = Math.floor(Date.now() + Math.random());
+    let uniqueID = createUniqueID();
     layers.set(uniqueID, temp);
 
     showStickies = false
@@ -793,19 +760,19 @@ function createUniqueID() {
 
 function createSticker(i, category) {
   temp = createGraphics(width + gridSize, height + gridSize)
-  temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category)
   let uniqueID = createUniqueID();
+  temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category, uniqueID)
   layers.set(uniqueID, temp);
 
   // tell all other users that we have added a new layer
   socket.emit('new_sticker', {
     uniqueID: uniqueID, 
     layer: {
-      id: i,
+      stickerID: i,
       x: temp.content.x,
       y: temp.content.y,
       s: temp.content.s,
-      category: category
+      category: category,
     }
   });
 }
