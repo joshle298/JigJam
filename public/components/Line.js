@@ -1,12 +1,13 @@
 //line class
 class Line {
-    constructor(col, x1, y1, x2, y2) {
-      this.col = shapeCols[col]
+    constructor(col, x1, y1, x2, y2, id) {
+      this.col = col
       this.x1 = x1
       this.y1 = y1
       this.x2 = x2
       this.y2 = y2
       this.wt = 2
+      this.id = id
   
       this.selected = true //start with it selecting
       currSelecting = true
@@ -19,7 +20,7 @@ class Line {
     display() {
       //show line
       push()
-      stroke(this.col)
+      stroke(shapeCols[this.col])
       strokeWeight(this.wt)
       line(this.x1 + offsetX, this.y1 + offsetY, this.x2 + offsetX, this.y2 + offsetY)
       pop()
@@ -60,9 +61,16 @@ class Line {
           fill(shapeCols[i])
           ellipse(Math.min(this.x1, this.x2) + offsetX - 15 + colorOff, Math.max(this.y1, this.y2) + offsetY + 45, 20)
   
-          if (dist(mouseX, mouseY, Math.min(this.x1, this.x2) + offsetX - 15 + colorOff, Math.max(this.y1, this.y2) + offsetY + 45) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving) {
-            this.col = shapeCols[i]
+        if (dist(mouseX, mouseY, Math.min(this.x1, this.x2) + offsetX - 15 + colorOff, Math.max(this.y1, this.y2) + offsetY + 45) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving) {
+              // emit the line's new color
+            socket.emit('change_color_layer', {
+              col: i,
+              id: this.id
+            });
+
+            this.col = i
           }
+
           colorOff += 25
         }
         pop()
@@ -91,17 +99,30 @@ class Line {
   
           //delete line
         } else if (dist(mouseX, mouseY, Math.max(this.x1, this.x2) + 20 + offsetX, Math.min(this.y1, this.y2) - 20 + offsetY) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving || keyIsDown(BACKSPACE)) {
+          socket.emit('delete_layer', {
+            id: this.id
+          });
           return true
   
           //decrease font size
         } else if (dist(mouseX, mouseY, Math.min(this.x1, this.x2) + offsetX - 15, Math.max(this.y1, this.y2) + offsetY + 45 + 30) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving) {
           mouseIsPressed = false
           this.wt -= 2
+          // emit new stroke weight
+          socket.emit('change_weight', {
+            wt: this.wt,
+            id: this.id
+          });
   
           //increase stroke weight
         } else if (dist(mouseX, mouseY, Math.min(this.x1, this.x2) + offsetX - 15 + 25, Math.max(this.y1, this.y2) + offsetY + 45 + 30) <= 10 && mouseIsPressed && !this.resizing1 && !this.resizing2 && !this.moving) {
           mouseIsPressed = false
           this.wt += 2
+          // emit new stroke weight
+          socket.emit('change_weight', {
+            wt: this.wt,
+            id: this.id
+          });
   
           //move line
         } else if (mouseIsPressed && !this.resizing1 && !this.resizing2) {
@@ -115,6 +136,15 @@ class Line {
           if (!mouseIsPressed) {
             this.resizing1 = false
           }
+
+          // emit the line's new position
+          socket.emit('move_line', {
+            x1: this.x1,
+            y1: this.y1,
+            x2: this.x2,
+            y2: this.y2,
+            id: this.id
+          });
         }
         if (this.resizing2) {
           this.x2 = mouseX
@@ -122,6 +152,15 @@ class Line {
           if (!mouseIsPressed) {
             this.resizing2 = false
           }
+
+          // emit the line's new position
+          socket.emit('move_line', {
+            x1: this.x1,
+            y1: this.y1,
+            x2: this.x2,
+            y2: this.y2,
+            id: this.id
+          });
         }
   
         //move line when moving
@@ -130,6 +169,16 @@ class Line {
           this.y1 += mouseY - pmouseY
           this.x2 += mouseX - pmouseX
           this.y2 += mouseY - pmouseY
+
+          // emit the line's new position
+          socket.emit('move_line', {
+            x1: this.x1,
+            y1: this.y1,
+            x2: this.x2,
+            y2: this.y2,
+            id: this.id
+          });
+
           if (!mouseIsPressed) {
             this.moving = false
           }

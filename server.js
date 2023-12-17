@@ -99,18 +99,55 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('new_shape', msg);
     });
 
+    // listen for new lines that are added
+    socket.on('new_line', function(msg) {
+        console.log("a new line has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_line', msg);
+    });
+
     // listen for layer movements
     socket.on('move_layer', function(msg) {
         console.log("a layer has been moved by one of our clients: ", msg);
         console.log(layers);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
-        console.log(msg.id);
         layer.x = msg.x;
         layer.y = msg.y;
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_layer', msg);
+    });
+
+    // listen for line movements
+    socket.on('move_line', function(msg) {
+        console.log("a line has been moved by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        layer.x1 = msg.x1;
+        layer.y1 = msg.y1;
+        layer.x2 = msg.x2;
+        layer.y2 = msg.y2;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('move_line', msg);
+    });
+
+    // listen for line weight changes
+    socket.on('change_weight', function(msg) {
+        console.log("a line has been changed weight by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.wt = msg.wt;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_weight', msg);
     });
 
     // listen for color changes
