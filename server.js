@@ -54,8 +54,12 @@ io.on('connection', function(socket) {
     // tell this player about any other players in the canvas
     socket.emit('all_previous_users', users);
 
-    // tell this player about any layers in the canvas
-    socket.emit('all_previous_layers', layers);
+    // Convert Map to an Array of entries
+    let layersArray = Array.from(layers.entries());
+
+    // Emit the layersArray to the new user
+    socket.emit('initial_layers', layersArray);
+
 
     // listen for new user messages
     socket.on('new_user', function(msg) {
@@ -92,6 +96,16 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('new_sticker', msg);
     });
 
+    // listen for new shapes that are added
+    socket.on('new_shape', function(msg) {
+        console.log("a new shape has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_shape', msg);
+    });
+
     // listen for layer movements
     socket.on('move_layer', function(msg) {
         console.log("a layer has been moved by one of our clients: ", msg);
@@ -104,6 +118,19 @@ io.on('connection', function(socket) {
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_layer', msg);
+    });
+
+    // listen for color changes
+    socket.on('change_color_layer', function(msg) {
+        console.log("a layer has been changed color by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.col = msg.col;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_color_layer', msg);
     });
 
     // listen for layer resizes
