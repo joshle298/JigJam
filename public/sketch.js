@@ -108,10 +108,10 @@ function preload() {
     users[message.id] = message;
   });
 
-  // listen for all previous users
-  socket.on('all_previous_users', function (message) {
-    console.log("Got all previous users!");
-    console.log(message);
+    // TODO: listen for all previous users
+    socket.on('all_previous_users', function(message) {
+      console.log("Got all previous users!");
+      console.log(message);
 
     // store these users
     for (let id in message) {
@@ -120,23 +120,14 @@ function preload() {
     console.log(users);
   });
 
-  // listen for all layers in the canvas
-  socket.on('all_previous_layers', function (message) {
-    console.log("Got all previous layers!");
-    console.log(message);
+//   // TODO: listen for all layers in the canvas
+//   socket.on('initial_layers', (layersArray) => {
+//     layers = new Map(layersArray);
+//     console.log(layers);
+//     // Now layers is a Map populated with the data from the server
+// });
 
-    for (let layer in message) {
-      console.log(layer);
-      layers.set(layer.uniqueID, layer.layer);
-    }
-    // // store these layers
-    // for (let id in message) {
-    //     layers[id] = message[id];
-    // }
 
-    console.log(layers);
-  });
-  
   // listen for any new stickers that may have been added
   socket.on('new_sticky', function(msg) {
     console.log("A new sticky has been added!");
@@ -170,6 +161,20 @@ function preload() {
     console.log(layers);
   });
 
+  // listen for any new shapes that may have been added
+  socket.on('new_shape', function(msg) {
+    console.log("A new shape has been added!");
+    console.log(msg);
+    newShape = createGraphics(width + gridSize, height + gridSize);
+    newShape.content = new Shape(msg.layer.shapeID, msg.layer.col, msg.layer.x, msg.layer.y, msg.layer.s, msg.uniqueID);
+    newShape.content.selected = false;
+    currSelecting = false;
+
+    layers.set(msg.uniqueID, newShape);
+
+    console.log(layers);
+  });
+
   // listen for movement of layers: need keyvalue, x, y
   socket.on('move_layer', function (msg) {
     console.log("a layer is being moved");
@@ -189,6 +194,16 @@ function preload() {
     // update the layer in our layers map
     let layer = layers.get(msg.id);
     layer.content.s = msg.s;
+  });
+
+  // listen for color changes of layers
+  socket.on('change_color_layer', function(msg) {
+    console.log("a layer is being changed color");
+    console.log(msg);
+
+    // update the layer in our layers map
+    let layer = layers.get(msg.id);
+    layer.content.col = msg.col;
   });
   
   // listen for layer deletions
@@ -283,8 +298,7 @@ function setup() {
 
   //add colors to sticky array & shape array
   stickyCols = [color(255, 115, 115), color(255, 178, 115), color(255, 241, 115), color(155, 255, 115), color(115, 236, 255), color(183, 151, 252)]
-  shapeCols = [color(50), color(128), color(255, 46, 46), color(255, 126, 46), color(255, 210, 46), color(46, 255, 95), color(46, 182, 255), color(164, 46, 255), color(255, 46, 144)]
-
+  shapeCols = [color(50,50,50), color(128,128,128), color(255, 46, 46), color(255, 126, 46), color(255, 210, 46), color(46, 255, 95), color(46, 182, 255), color(164, 46, 255), color(255, 46, 144)]
 }
 
 function draw() {
@@ -627,22 +641,27 @@ function draw() {
         
         // Generate a unique ID for the new layer
         let uniqueID = createUniqueID();
+        let randomColorIndex = round(random(0, shapeCols.length - 1));
+        temp = createGraphics(width + gridSize, height + gridSize)
+        temp.content = new Shape(i, randomColorIndex, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, uniqueID)
+      
         layers.set(uniqueID, temp);
-        
-        // // tell all other users that we have added a new layer
-        // socket.emit('new_layer', {uniqueID: uniqueID, layer:  {
-        //   id: temp.content.id,
-        //   col: temp.content.col,
-        //   x: temp.content.x,
-        //   y: temp.content.y,
-        //   s: temp.content.s
-        // }});
+
+        socket.emit('new_shape', {
+          uniqueID: uniqueID, 
+          layer: {
+            shapeID: temp.content.shapeID,
+            col: randomColorIndex,
+            x: temp.content.x,
+            y: temp.content.y,
+            s: temp.content.s
+          }
+        });   
       }
 
-        // tabOffset2 += 55
-        tabOffset2 += 70
-      }
+      tabOffset2 += 70
     }
+  }
 
     //3 STICKY TOOL
     image(stickyTool, 10, 270, 80, 80)

@@ -78,7 +78,7 @@ class Sticker {
             this.s = mouseY - this.y
           }
 
-          // emit the sticky's new position
+          // emit the sticky's new size
           socket.emit('resize_layer', {
             s: this.s,
             id: this.id
@@ -96,7 +96,7 @@ class Sticker {
           if (!mouseIsPressed) {
             this.moving = false
           }
-          
+
           // emit the sticky's new position
           socket.emit('move_layer', {
             x: this.x,
