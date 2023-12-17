@@ -38,10 +38,8 @@ server.listen(port, () => {
     console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀`);
 });
 
-// your custom code for faciltating communication with clients can be written below
-
 // keep track of all users in canvas
-let users = {};
+let users = new Map();
 
 // keep track of all layers within canvas
 let layers = new Map();
