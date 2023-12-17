@@ -134,6 +134,20 @@ function preload() {
     console.log(layers);
   });
 
+  // listen for any new lines that may have been added
+  socket.on('new_line', function(msg) {
+    console.log("A new line has been added!");
+    console.log(msg);
+    newLine = createGraphics(width + gridSize, height + gridSize);
+    newLine.content = new Line(msg.layer.col, msg.layer.x1, msg.layer.y1, msg.layer.x2, msg.layer.y2, msg.uniqueID);
+    newLine.content.selected = false;
+    currSelecting = false;
+
+    layers.set(msg.uniqueID, newLine);
+
+    console.log(layers);
+  });
+
   // listen for movement of layers: need keyvalue, x, y
   socket.on('move_layer', function(msg) {
     console.log("a layer is being moved");
@@ -179,6 +193,24 @@ function preload() {
     console.log("a text is being edited");
     console.log(msg);
     layers.get(msg.id).content.txt = msg.txt;
+  });
+
+  // listen for weight changes
+  socket.on('change_weight', function(msg) {
+    console.log("a weight is being changed");
+    console.log(msg);
+    layers.get(msg.id).content.wt = msg.wt;
+  });
+
+  // listen for line movements
+  socket.on('move_line', function(msg) {
+    console.log("a line is being moved");
+    console.log(msg);
+    let layer = layers.get(msg.id);
+    layer.content.x1 = msg.x1;
+    layer.content.y1 = msg.y1;
+    layer.content.x2 = msg.x2;
+    layer.content.y2 = msg.y2;
   });
 
   //load food images into array
@@ -295,9 +327,20 @@ function draw() {
     mouseIsPressed = false
 
     temp = createGraphics(width + gridSize, height + gridSize)
-    temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50)
     let uniqueID = createUniqueID();
+    temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50, uniqueID)
     layers.set(uniqueID, temp);
+
+    socket.emit('new_line', {
+      uniqueID: uniqueID, 
+      layer: {
+        col: temp.content.col,
+        x1: temp.content.x1,
+        y1: temp.content.y1,
+        x2: temp.content.x2,
+        y2: temp.content.y2
+      }
+    });
 
     showStickies = false
     showStickers = false
