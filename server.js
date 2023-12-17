@@ -116,6 +116,16 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('new_line', msg);
     });
 
+    // listen for new text that is added
+    socket.on('new_text', function(msg) {
+        console.log("a new text has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_text', msg);
+    });
+
     // listen for layer movements
     socket.on('move_layer', function(msg) {
         console.log("a layer has been moved by one of our clients: ", msg);
@@ -205,5 +215,32 @@ io.on('connection', function(socket) {
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('change_text', msg);
+    });
+
+    // listen for text resizes
+    socket.on('text_resize', function(msg) {
+        console.log("a text has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.txtSz = msg.txtSz;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('text_resize', msg);
+    });
+
+    // listen for text border resize
+    socket.on('text_border_resize', function(msg) {
+        console.log("a text border has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.w = msg.w;
+        layer.h = msg.h;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('text_border_resize', msg);
     });
 });

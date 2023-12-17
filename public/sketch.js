@@ -148,6 +148,41 @@ function preload() {
     console.log(layers);
   });
 
+  // listen for any new text that may have been added
+  socket.on('new_text', function(msg) {
+    console.log("A new text has been added!");
+    console.log(msg);
+    newText = createGraphics(width + gridSize, height + gridSize);
+    newText.content = new TextBoxComp(msg.layer.x, msg.layer.y, msg.layer.w, msg.layer.h, msg.uniqueID);
+    newText.content.selected = false;
+    newText.content.txtInput.hide()
+    currSelecting = false;
+
+    layers.set(msg.uniqueID, newText);
+
+    console.log(layers);
+  });
+
+  // listen for text resize
+  socket.on('text_resize', function(msg) {
+    console.log("A text is being resized");
+    console.log(msg);
+
+    // update the layer in our layers map
+    let layer = layers.get(msg.id);
+    layer.content.txtSz = msg.txtSz;
+  });
+
+  // listen for text border resize
+  socket.on('text_border_resize', function(msg) {
+    console.log("A text border is being resized");
+    console.log(msg);
+
+    let layer = layers.get(msg.id);
+    layer.content.w = msg.w;
+    layer.content.h = msg.h;
+  });
+
   // listen for movement of layers: need keyvalue, x, y
   socket.on('move_layer', function(msg) {
     console.log("a layer is being moved");
@@ -435,9 +470,6 @@ function draw() {
         let uniqueID = createUniqueID();
         temp = createGraphics(width + gridSize, height + gridSize)
         temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName, uniqueID);
-        // temp.content.txtInput.style.position = "fixed"
-        // temp.content.txtInput.style.zIndex = String(i)
-        // console.log(temp.content.txtInput.style.zIndex)
         layers.set(uniqueID, temp);
         
         temp.content.id = uniqueID;
@@ -686,12 +718,24 @@ function draw() {
 
   if (mouseX >= 10 && mouseX <= 90 && mouseY >= 450 && mouseY <= 530 && mouseIsPressed && !currSelecting) {
     mouseIsPressed = false
-
-    temp = createGraphics(width + gridSize, height + gridSize)
-    temp.content = new TextBox(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100)
-
     let uniqueID = createUniqueID();
+    temp = createGraphics(width + gridSize, height + gridSize)
+    temp.content = new TextBoxComp(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100);
     layers.set(uniqueID, temp);
+    
+    temp.content.id = uniqueID;
+    // tell all other users that we have added a new text layer
+    socket.emit('new_text', {
+      uniqueID: uniqueID, 
+      layer: {
+        txt: temp.content.txt,
+        txtSz: temp.content.txtSz,
+        x: temp.content.x,
+        y: temp.content.y,
+        w: temp.content.w,
+        h: temp.content.h,
+      }
+    });
 
     showStickies = false
     showStickers = false
