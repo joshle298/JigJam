@@ -20,19 +20,23 @@ class Sticky {
     }
   
     display() {
+      push()
+      noStroke()
       //sticky bg
       fill(this.col)
       rect(this.x + offsetX, this.y + offsetY, this.s, this.s)
-  
+
       //sticky text
       fill(0)
       textWrap(CHAR)
-      text(this.txt, this.x + offsetX + 5, this.y + offsetY + 5, this.s - 10, this.s - 20)
-  
+      text(this.txt, this.x + offsetX + 5, this.y + offsetY + 15, this.s - 10, this.s - 20)
+      pop()
+
       //creator name
       push()
-      fill(80)
-      textSize(10)
+      noStroke()
+      fill('black')
+      textSize(12)
       text(this.name, this.x + offsetX + 5, this.y + offsetY + this.s - 14, this.s - 10, this.s - 10)
       pop()
   
@@ -44,8 +48,8 @@ class Sticky {
       if (this.selected) {
         push() //selection box
         noFill()
-        strokeWeight(4)
-        stroke("purple")
+        strokeWeight(1)
+        stroke("#d4d4d4")
         rect(this.x + offsetX, this.y + offsetY, this.s)
         pop()
   

@@ -22,8 +22,9 @@ display() {
     fill(0)
     textWrap(CHAR)
     push()
+    noStroke()
     textSize(this.txtSz)
-    text(this.txt, this.x + offsetX + 5, this.y + offsetY + 5, this.w - 10, this.h - 10)
+    text(this.txt, this.x + offsetX + 5, this.y + offsetY + 15, this.w - 10, this.h - 10)
     pop()
 
     //position text input 
@@ -34,9 +35,17 @@ display() {
     if (this.selected) {
     push() //selection box
     noFill()
-    strokeWeight(4)
-    stroke("purple")
-    rect(this.x + offsetX, this.y + offsetY, this.w, this.h)
+    strokeWeight(1)
+    stroke("#d4d4d4")
+    if(this.txtSz > 20 ){
+        rect(this.x + offsetX, this.y + offsetY - 13, this.w, this.h)
+
+    } else {
+        rect(this.x + offsetX, this.y + offsetY, this.w, this.h)
+
+    }
+
+
     pop()
 
     push() //delete btn

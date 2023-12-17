@@ -18,6 +18,7 @@ class Shape {
         //show shape depending on what is selected
         fill(this.col)
         push()
+        noStroke()
         if (this.id == 0) {
         ellipseMode(CORNER)
         ellipse(this.x + offsetX, this.y + offsetY, this.s)
@@ -39,8 +40,8 @@ class Shape {
         if (this.selected) {
         push() //selection box
         noFill()
-        strokeWeight(4)
-        stroke("purple")
+        strokeWeight(1)
+        stroke("#d4d4d4")
         rect(this.x + offsetX, this.y + offsetY, this.s)
         pop()
 

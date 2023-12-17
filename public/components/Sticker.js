@@ -33,8 +33,8 @@ class Sticker {
       if (this.selected) {
         push() //selection box
         noFill()
-        strokeWeight(4)
-        stroke("purple")
+        strokeWeight(1)
+        stroke("#d4d4d4")
         rect(this.x + offsetX, this.y + offsetY, this.s)
         pop()
   

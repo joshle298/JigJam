@@ -1,5 +1,6 @@
 function displayRecordPlayer(){
     push()
+    stroke("#afafaf")
     fill("#f2f2f2")
     rect(200,70,300,300,9)
 
@@ -19,6 +20,8 @@ function displayRecordPlayer(){
 
     pop()
 
+    push()
+    stroke('#afafaf')
     fill(0,216,221)
     rect(210,80,35,35,9)
 
@@ -30,9 +33,11 @@ function displayRecordPlayer(){
 
     fill(178,97,242)
     rect(345,80,35,35,9)
+    pop()
 
     push()
-    fill(0)
+    stroke("#afafaf")
+    fill(53,53,53)
     ellipse(460,110,50)
     stroke(255)
     noFill()
