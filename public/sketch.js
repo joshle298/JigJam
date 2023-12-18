@@ -705,22 +705,27 @@ function draw() {
 
           temp = createGraphics(width + gridSize, height + gridSize)
           temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
-
+          
           // Generate a unique ID for the new layer
-          let uniqueID = Math.floor(Date.now() + Math.random());
+          let uniqueID = createUniqueID();
+          let randomColorIndex = round(random(0, shapeCols.length - 1));
+          temp = createGraphics(width + gridSize, height + gridSize)
+          temp.content = new Shape(i, randomColorIndex, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, uniqueID)
+        
           layers.set(uniqueID, temp);
-
-          // // tell all other users that we have added a new layer
-          // socket.emit('new_layer', {uniqueID: uniqueID, layer:  {
-          //   id: temp.content.id,
-          //   col: temp.content.col,
-          //   x: temp.content.x,
-          //   y: temp.content.y,
-          //   s: temp.content.s
-          // }});
+  
+          socket.emit('new_shape', {
+            uniqueID: uniqueID, 
+            layer: {
+              shapeID: temp.content.shapeID,
+              col: randomColorIndex,
+              x: temp.content.x,
+              y: temp.content.y,
+              s: temp.content.s
+            }
+          });   
         }
 
-        // tabOffset2 += 55
         tabOffset2 += 70
       }
     }
