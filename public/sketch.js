@@ -1,4 +1,4 @@
-let mode = 2
+let mode = 0
 let offsetX = 0;
 let offsetY = 0;
 let dragging = false;
