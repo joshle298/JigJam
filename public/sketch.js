@@ -823,7 +823,6 @@ function draw() {
       if (typeof foodTabColor === 'string') {
         push()
         fill(foodTabColor)
-        stroke('#afafaf')
         rect(200 + 90, 359, 35, 88.75, 0, 9, 0, 0)
         pop()
 
@@ -1009,11 +1008,14 @@ function draw() {
           stickerOffset2 += 10
         }
       }
+
+      push()
+      noFill()
+      stroke('#afafaf')
+      strokeWeight(1)
+      rect(100, 359, 100 + 90 + 35, (50 * 6) + (5 * 6) + 25, 0, 9, 9, 0)
+      pop()
     }
-
-    
-
-    
 
     //food sticker button
     if (mouseX >= 290 && mouseX <= 290 + 35 && mouseY >= 359 && mouseY <= 359 + 88.75 && mouseIsPressed && !currSelecting) {

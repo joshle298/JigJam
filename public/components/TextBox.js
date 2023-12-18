@@ -51,7 +51,7 @@ class TextBox {
                 this.selectBoxOffset = 0
                 this.deleteBtnOffset = 0
             }
-            rect(this.x + offsetX, this.y + offsetY - this.selectBoxOffset, this.w, this.h)
+            rect(this.x + offsetX, this.y + offsetY - this.selectBoxOffset, this.w, this.h + this.selectBoxOffset)
 
 
             pop()
