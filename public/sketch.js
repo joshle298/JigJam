@@ -389,7 +389,7 @@ function draw() {
 
     fill('#eaeaea');
     strokeWeight(1)
-    stroke('black')
+    stroke('#afafaf')
     rect(rectX, rectY, rectWidth, rectHeight, 9);
 
     textAlign(CENTER, CENTER);
@@ -406,7 +406,7 @@ function draw() {
     //create button
     fill('#D3FF8A')
     strokeWeight(1)
-    stroke('black')
+    stroke('#afafaf')
     rect(width / 2 - 100, height / 2 + 80, 200, 40, 9)
     fill('black')
     noStroke()
