@@ -38,10 +38,8 @@ server.listen(port, () => {
     console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀`);
 });
 
-// your custom code for faciltating communication with clients can be written below
-
 // keep track of all users in canvas
-let users = {};
+let users = new Map();
 
 // keep track of all layers within canvas
 let layers = new Map();
@@ -56,8 +54,12 @@ io.on('connection', function(socket) {
     // tell this player about any other players in the canvas
     socket.emit('all_previous_users', users);
 
-    // tell this player about any layers in the canvas
-    socket.emit('all_previous_layers', layers);
+    // Convert Map to an Array of entries
+    let layersArray = Array.from(layers.entries());
+
+    // Emit the layersArray to the new user
+    socket.emit('initial_layers', layersArray);
+
 
     // listen for new user messages
     socket.on('new_user', function(msg) {
@@ -74,14 +76,47 @@ io.on('connection', function(socket) {
         // socket.broadcast.emit('new_player', allPlayers[myId]);
     });
 
-    // listen for new layers that are added
-    socket.on('new_layer', function(msg) {
-        console.log("a new layer has been added by one of our clients: ", msg);
+    // listen for new stickies that are added
+    socket.on('new_sticky', function(msg) {
+        console.log("a new sticky has been added by one of our clients: ", msg);
         // store new layer in our layers array
         layers.set(msg.uniqueID, msg.layer);
 
         // send this out to all other clients along with the layer id
-        socket.broadcast.emit('new_layer', msg);
+        socket.broadcast.emit('new_sticky', msg);
+    });
+
+    // listen for new stickers that are added
+    
+
+    // listen for new shapes that are added
+    socket.on('new_shape', function(msg) {
+        console.log("a new shape has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_shape', msg);
+    });
+
+    // listen for new lines that are added
+    socket.on('new_line', function(msg) {
+        console.log("a new line has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_line', msg);
+    });
+
+    // listen for new text that is added
+    socket.on('new_text', function(msg) {
+        console.log("a new text has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_text', msg);
     });
 
     // listen for layer movements
@@ -90,11 +125,115 @@ io.on('connection', function(socket) {
         console.log(layers);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
-        console.log(msg.id);
         layer.x = msg.x;
         layer.y = msg.y;
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_layer', msg);
+    });
+
+    // listen for line movements
+    socket.on('move_line', function(msg) {
+        console.log("a line has been moved by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        layer.x1 = msg.x1;
+        layer.y1 = msg.y1;
+        layer.x2 = msg.x2;
+        layer.y2 = msg.y2;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('move_line', msg);
+    });
+
+    // listen for line weight changes
+    socket.on('change_weight', function(msg) {
+        console.log("a line has been changed weight by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.wt = msg.wt;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_weight', msg);
+    });
+
+    // listen for color changes
+    socket.on('change_color_layer', function(msg) {
+        console.log("a layer has been changed color by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.col = msg.col;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_color_layer', msg);
+    });
+
+    // listen for layer resizes
+    socket.on('resize_layer', function(msg) {
+        console.log("a layer has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.s = msg.s;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('resize_layer', msg);
+    });
+
+    // listen for layer deletions
+    socket.on('delete_layer', function(msg) {
+        console.log("a layer has been deleted by one of our clients: ", msg);
+        console.log(layers);
+        // delete the layer in our layers array
+        layers.delete(msg.id);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('delete_layer', msg);
+    });
+
+    // listen for text changes
+    socket.on('change_text', function(msg) {
+        console.log("a text has been changed by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.txt = msg.txt;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('change_text', msg);
+    });
+
+    // listen for text resizes
+    socket.on('text_resize', function(msg) {
+        console.log("a text has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.txtSz = msg.txtSz;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('text_resize', msg);
+    });
+
+    // listen for text border resize
+    socket.on('text_border_resize', function(msg) {
+        console.log("a text border has been resized by one of our clients: ", msg);
+        console.log(layers);
+        // update the layer in our layers array
+        let layer = layers.get(msg.id);
+        console.log(msg.id);
+        layer.w = msg.w;
+        layer.h = msg.h;
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('text_border_resize', msg);
     });
 });

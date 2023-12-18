@@ -1,4 +1,4 @@
-let mode = 0
+let mode = 2
 let offsetX = 0;
 let offsetY = 0;
 let dragging = false;
@@ -89,84 +89,204 @@ let recordSpeed = 0.6;
 let needleRot = 0;
 
 function preload() {
-  // send messages to all other clients in the canvas
-  socket = io();
+   // send messages to all other clients in the canvas
+   socket = io();
 
-  // tell all other users that we have joined the canvas
-  socket.emit('new_user', {
-    // x: x,
-    // y: y,
-    // color: currentColor
-  });
-
-  // listen for any new users that may have joined
-  socket.on('new_user', function (message) {
-    console.log("A new user has joined!");
-    console.log(message);
-
-    // store the newly joined user in our object
-    users[message.id] = message;
-  });
-
-  // listen for all previous users
-  socket.on('all_previous_users', function (message) {
-    console.log("Got all previous users!");
-    console.log(message);
-
-    // store these users
-    for (let id in message) {
-      users[id] = message[id];
-    }
-    console.log(users);
-  });
-
-  // listen for all layers in the canvas
-  socket.on('all_previous_layers', function (message) {
-    console.log("Got all previous layers!");
-    console.log(message);
-
-    for (let layer in message) {
-      console.log(layer);
-      layers.set(layer.uniqueID, layer.layer);
-    }
-    // // store these layers
-    // for (let id in message) {
-    //     layers[id] = message[id];
-    // }
-
-    console.log(layers);
-  });
-
-  // listen for any new layers that may have been added
-  socket.on('new_layer', function (msg) {
-    console.log("A new layer has been added!");
-    console.log(msg);
-    newSticky = createGraphics(width + gridSize, height + gridSize);
-
-    // Assuming msg.col is an array [r, g, b]
-    let col = color(msg.layer.col[0], msg.layer.col[1], msg.layer.col[2]);
-    newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "other", msg.uniqueID);
-    newSticky.content.selected = false;
-    currSelecting = false;
-    // use the info to add new stickies to canvas
-    // temp = createGraphics(width + gridSize, height + gridSize)
-    // temp.content = new Shape(color(msg.id, msg.col.levels[0], msg.col.levels[1], msg.col.levels[2]), msg.x, msg.y, msg.s)
-    // store the newly added layer in our object
-    layers.set(msg.uniqueID, newSticky);
-
-    console.log(layers);
-  });
-
-  // listen for movement of layers: need keyvalue, x, y
-  socket.on('move_layer', function (msg) {
-    console.log("a layer is being moved");
-    console.log(msg);
-
-    // update the layer in our layers map
-    let layer = layers.get(msg.id);
-    layer.content.x = msg.x;
-    layer.content.y = msg.y;
-  });
+   // tell all other users that we have joined the canvas
+   socket.emit('new_user', {
+     // x: x,
+     // y: y,
+     // color: currentColor
+   });
+ 
+   // listen for any new users that may have joined
+   socket.on('new_user', function (message) {
+     console.log("A new user has joined!");
+     console.log(message);
+ 
+     // store the newly joined user in our object
+     users[message.id] = message;
+   });
+ 
+     // TODO: listen for all previous users
+     socket.on('all_previous_users', function(message) {
+       console.log("Got all previous users!");
+       console.log(message);
+ 
+     // store these users
+     for (let id in message) {
+       users[id] = message[id];
+     }
+     console.log(users);
+   });
+ 
+ //   // TODO: listen for all layers in the canvas
+ //   socket.on('initial_layers', (layersArray) => {
+ //     layers = new Map(layersArray);
+ //     console.log(layers);
+ //     // Now layers is a Map populated with the data from the server
+ // });
+ 
+   // listen for any new stickers that may have been added
+   socket.on('new_sticky', function(msg) {
+     console.log("A new sticky has been added!");
+     console.log(msg);
+     newSticky = createGraphics(width + gridSize, height + gridSize);
+ 
+     // Assuming msg.col is an array [r, g, b]
+     let col = color(msg.layer.col[0], msg.layer.col[1], msg.layer.col[2]);
+     newSticky.content = new Sticky(col, msg.layer.x, msg.layer.y, msg.layer.s, "other", msg.uniqueID);
+     newSticky.content.selected = false;
+     // newSticky.content.txtInput.hide()
+     newSticky.content.txtInput.hide()
+     currSelecting = false;
+ 
+     layers.set(msg.uniqueID, newSticky);
+ 
+     console.log(layers);
+   });
+ 
+   // listen for any new stickers that may have been added
+   socket.on('new_sticker', function(msg) {
+     console.log("A new sticker has been added!");
+     console.log(msg);
+     newSticker = createGraphics(width + gridSize, height + gridSize);
+     newSticker.content = new Sticker(msg.layer.stickerID, msg.layer.x, msg.layer.y, msg.layer.s, msg.layer.category, msg.uniqueID);
+     newSticker.content.selected = false;
+     currSelecting = false;
+ 
+     layers.set(msg.uniqueID, newSticker);
+ 
+     console.log(layers);
+   });
+ 
+   // listen for any new shapes that may have been added
+   socket.on('new_shape', function(msg) {
+     console.log("A new shape has been added!");
+     console.log(msg);
+     newShape = createGraphics(width + gridSize, height + gridSize);
+     newShape.content = new Shape(msg.layer.shapeID, msg.layer.col, msg.layer.x, msg.layer.y, msg.layer.s, msg.uniqueID);
+     newShape.content.selected = false;
+     currSelecting = false;
+ 
+     layers.set(msg.uniqueID, newShape);
+ 
+     console.log(layers);
+   });
+ 
+   // listen for any new lines that may have been added
+   socket.on('new_line', function(msg) {
+     console.log("A new line has been added!");
+     console.log(msg);
+     newLine = createGraphics(width + gridSize, height + gridSize);
+     newLine.content = new Line(msg.layer.col, msg.layer.x1, msg.layer.y1, msg.layer.x2, msg.layer.y2, msg.uniqueID);
+     newLine.content.selected = false;
+     currSelecting = false;
+ 
+     layers.set(msg.uniqueID, newLine);
+ 
+     console.log(layers);
+   });
+ 
+   // listen for any new text that may have been added
+   socket.on('new_text', function(msg) {
+     console.log("A new text has been added!");
+     console.log(msg);
+     newText = createGraphics(width + gridSize, height + gridSize);
+     newText.content = new TextBoxComp(msg.layer.x, msg.layer.y, msg.layer.w, msg.layer.h, msg.uniqueID);
+     newText.content.selected = false;
+     newText.content.txtInput.hide()
+     currSelecting = false;
+ 
+     layers.set(msg.uniqueID, newText);
+ 
+     console.log(layers);
+   });
+ 
+   // listen for text resize
+   socket.on('text_resize', function(msg) {
+     console.log("A text is being resized");
+     console.log(msg);
+ 
+     // update the layer in our layers map
+     let layer = layers.get(msg.id);
+     layer.content.txtSz = msg.txtSz;
+   });
+ 
+   // listen for text border resize
+   socket.on('text_border_resize', function(msg) {
+     console.log("A text border is being resized");
+     console.log(msg);
+ 
+     let layer = layers.get(msg.id);
+     layer.content.w = msg.w;
+     layer.content.h = msg.h;
+   });
+ 
+   // listen for movement of layers: need keyvalue, x, y
+   socket.on('move_layer', function (msg) {
+     console.log("a layer is being moved");
+     console.log(msg);
+ 
+     // update the layer in our layers map
+     let layer = layers.get(msg.id);
+     layer.content.x = msg.x;
+     layer.content.y = msg.y;
+   });
+ 
+   // listen for resizing of layers: need keyvalue, s
+   socket.on('resize_layer', function(msg) {
+     console.log("a layer is being resized");
+     console.log(msg);
+ 
+     // update the layer in our layers map
+     let layer = layers.get(msg.id);
+     layer.content.s = msg.s;
+   });
+ 
+   // listen for color changes of layers
+   socket.on('change_color_layer', function(msg) {
+     console.log("a layer is being changed color");
+     console.log(msg);
+ 
+     // update the layer in our layers map
+     let layer = layers.get(msg.id);
+     layer.content.col = msg.col;
+   });
+   
+   // listen for layer deletions
+   socket.on('delete_layer', function(msg) {
+     console.log("a layer is being deleted");
+     console.log(msg);
+ 
+     // delete the layer from our layers map
+     layers.delete(msg.id);
+   });
+ 
+   // listen for text edits
+   socket.on('change_text', function(msg) {
+     console.log("a text is being edited");
+     console.log(msg);
+     layers.get(msg.id).content.txt = msg.txt;
+   });
+ 
+   // listen for weight changes
+   socket.on('change_weight', function(msg) {
+     console.log("a weight is being changed");
+     console.log(msg);
+     layers.get(msg.id).content.wt = msg.wt;
+   });
+ 
+   // listen for line movements
+   socket.on('move_line', function(msg) {
+     console.log("a line is being moved");
+     console.log(msg);
+     let layer = layers.get(msg.id);
+     layer.content.x1 = msg.x1;
+     layer.content.y1 = msg.y1;
+     layer.content.x2 = msg.x2;
+     layer.content.y2 = msg.y2;
+   }); 
 
   //load food images into array
   for (let i = 0; i < 7; i++) {
@@ -515,9 +635,20 @@ function draw() {
       mouseIsPressed = false
 
       temp = createGraphics(width + gridSize, height + gridSize)
-      temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50)
-      let uniqueID = Math.floor(Date.now() + Math.random());
+      let uniqueID = createUniqueID();
+      temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50, uniqueID)
       layers.set(uniqueID, temp);
+  
+      socket.emit('new_line', {
+        uniqueID: uniqueID, 
+        layer: {
+          col: temp.content.col,
+          x1: temp.content.x1,
+          y1: temp.content.y1,
+          x2: temp.content.x2,
+          y2: temp.content.y2
+        }
+      });
 
       showStickies = false
       showStickers = false
@@ -1077,4 +1208,27 @@ function mouseDragged() {
 
 function isMouseWithinCanvas() {
   return mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height;
+}
+
+function createUniqueID() {
+  return Math.floor(Date.now() + Math.random());
+}
+
+function createSticker(i, category) {
+  temp = createGraphics(width + gridSize, height + gridSize)
+  let uniqueID = createUniqueID();
+  temp.content = new Sticker(i, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, category, uniqueID)
+  layers.set(uniqueID, temp);
+
+  // tell all other users that we have added a new layer
+  socket.emit('new_sticker', {
+    uniqueID: uniqueID, 
+    layer: {
+      stickerID: i,
+      x: temp.content.x,
+      y: temp.content.y,
+      s: temp.content.s,
+      category: category,
+    }
+  });
 }
