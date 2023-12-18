@@ -475,6 +475,7 @@ function draw() {
       let x = startX + i * (rectWidth + 70); //Adjust spacing between rectangles
       let y = 330;
 
+      push()
       stroke("#afafaf")
       strokeWeight(1)
       fill('white');
@@ -484,10 +485,12 @@ function draw() {
       fill('#D3FF8A')
       rect(x + rectWidth - 70, y + 5, 60, 30, 9)
       image(userIcon, x + rectWidth - 67, y + 5, 26, 26)
+      pop()
 
       textSize(25)
       noStroke()
       fill('black')
+     
 
       if (i % 3 === 0) { //room 1
         text("Room 1", x + 15, y + 27) //document title
@@ -562,6 +565,10 @@ function draw() {
     stroke('#afafaf')
     strokeWeight(1)
     rect(20, 20, 40, 40, 9)
+    fill(209, 254, 145)
+    noStroke()
+    triangle(27, 37, 55, 37, 40.5, 25)
+    rect(29, 37, 23, 14)
     image(homeIcon, 22.5, 20, 35, 35)
     pop()
 
@@ -589,8 +596,8 @@ function draw() {
     stroke('#afafaf')
     fill('#f2f2f2')
     rect(200, 20, 40, 40, 9)
-    fill(209, 254, 145)
-    ellipse(219, 41, 20, 20)
+    fill('#d9d9d9')
+    ellipse(219, 41, 27, 27)
     image(recordPlayerIcon, 203, 22, 35, 35)
     pop()
 
@@ -814,9 +821,12 @@ function draw() {
       //clicking on sticker tabs
       //food tab
       if (typeof foodTabColor === 'string') {
+        push()
         fill(foodTabColor)
         stroke('#afafaf')
         rect(200 + 90, 359, 35, 88.75, 0, 9, 0, 0)
+        pop()
+
         push()
         translate(300, 380)
         rotate(radians(90))
@@ -831,8 +841,10 @@ function draw() {
 
       //doodles tab
       if (typeof doodlesTabColor === 'string') {
+        push()
         fill(doodlesTabColor)
         rect(200 + 90, 359 + 88.75, 35, 88.75, 0, 0, 0, 0)
+        pop()
         push()
         translate(300, 460)
         rotate(radians(90))
@@ -848,8 +860,10 @@ function draw() {
 
       //reactions tab
       if (typeof reactionsTabColor === 'string') {
+        push()
         fill(reactionsTabColor)
         rect(200 + 90, 359 + 88.75 + 88.75, 35, 88.75, 0, 0, 0, 0)
+        pop()
         push()
         translate(300, 545)
         rotate(radians(90))
@@ -865,8 +879,10 @@ function draw() {
 
       //words tab
       if (typeof wordsTabColor === 'string') {
+        push()
         fill(wordsTabColor)
         rect(200 + 90, 359 + 88.75 + 88.75 + 88.75, 35, 88.75, 0, 0, 9, 0)
+        pop()
         push()
         translate(300, 645)
         rotate(radians(90))
@@ -1070,6 +1086,7 @@ function draw() {
       showStickers = false
       showShapes = false
       handMode = false
+      showRecordPlayer = false
     }
 
     //6 SELECT TOOL
@@ -1130,14 +1147,19 @@ function draw() {
     if (mouseX >= 10 && mouseX <= 90 && mouseY >= 560 && mouseY <= 640 && mouseIsPressed) {
       mouseIsPressed = false
       handMode = false
+      showRecordPlayer = false
+
     }
 
     //change to hand mode
-    if (mouseX >= 0 && mouseX <= 50 && mouseY >= 650 && mouseY <= 730 && mouseIsPressed) {
+    if (mouseX >= 10 && mouseX <= 90 && mouseY >= 650 && mouseY <= 730 && mouseIsPressed) {
       mouseIsPressed = false
       handMode = true
       showStickies = false
       showStickers = false
+      showShapes = false
+      showRecordPlayer = false
+
     }
 
     //setting cursor
