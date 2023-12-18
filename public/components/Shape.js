@@ -17,8 +17,8 @@ class Shape {
 
     display() {
         //show shape depending on what is selected
-        fill(shapeCols[this.col])
         push()
+        fill(shapeCols[this.col])
         noStroke()
         if (this.shapeID == 0) {
         ellipseMode(CORNER)
