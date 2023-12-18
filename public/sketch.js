@@ -547,14 +547,14 @@ function draw() {
     layers.forEach((layer, id) => {
       image(layer, offsetX % gridSize - gridSize, offsetY % gridSize - gridSize);
 
-      let deleteThis = layer.content.display();
+    let deleteThis = layer.content.display();
 
-      // If user deletes the item, delete the layer from the map
-      if (deleteThis) {
-        layers.delete(id);
-        currSelecting = false;
-      }
-    });
+    // If user deletes the item, delete the layer from the map
+    if (deleteThis) {
+      layers.delete(id);
+      currSelecting = false;
+    }
+  });
 
     // To go over all layers in reverse for selecting and unselecting,
     // we convert the Map values to an array and then reverse it
@@ -714,15 +714,14 @@ function draw() {
         if (mouseX >= 110 && mouseX <= 190 && mouseY >= 180 + tabOffset2 && mouseY <= 180 + tabOffset2 + 65 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
 
-        temp = createGraphics(width + gridSize, height + gridSize)
-        temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
-        
         // Generate a unique ID for the new layer
         let uniqueID = createUniqueID();
         let randomColorIndex = round(random(0, shapeCols.length - 1));
         temp = createGraphics(width + gridSize, height + gridSize)
-        temp.content = new Shape(i, randomColorIndex, width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, uniqueID)
-      
+        temp.content = new Shape(i, round(random(0, shapeCols.length - 1)), width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100)
+        
+        // Generate a unique ID for the new layer
+        let uniqueID = Math.floor(Date.now() + Math.random());
         layers.set(uniqueID, temp);
 
         socket.emit('new_shape', {
@@ -773,16 +772,16 @@ function draw() {
         
         temp.content.id = uniqueID;
 
-          socket.emit('new_layer', {
-            uniqueID: uniqueID,
-            layer: {
-              col: [temp.content.col.levels[0], temp.content.col.levels[1], temp.content.col.levels[2]], // Convert the color to an RGB array
-              x: temp.content.x,
-              y: temp.content.y,
-              s: temp.content.s
-            }
-          });
-        }
+        socket.emit('new_layer', {
+          uniqueID: uniqueID, 
+          layer: {
+            col: [temp.content.col.levels[0], temp.content.col.levels[1], temp.content.col.levels[2]], // Convert the color to an RGB array
+            x: temp.content.x,
+            y: temp.content.y,
+            s: temp.content.s
+          }
+        });        
+      }
 
         tabOffset2 += 70
       }
@@ -791,54 +790,49 @@ function draw() {
     //4 STICKER TOOL 
     image(stickerTool, 10, 360, 80, 80)
 
-    //stickers toolbar
-    if (showStickers) {
-      push()
-      fill('#f2f2f2')
-      stroke('#afafaf')
-      strokeWeight(1)
-      rect(100, 359, 100 + 90 + 35, (50 * 6) + (5 * 6) + 25, 0, 9, 9, 0)
-      pop()
+  //stickers toolbar
+  if (showStickers) {
 
-      if (category == 'foods') {
-        foodTabColor = selectedTabColor
-        doodlesTabColor = unselectedTabColor
-        reactionsTabColor = unselectedTabColor
-        wordsTabColor = unselectedTabColor
-      } else if (category == 'doodles') {
-        foodTabColor = unselectedTabColor
-        doodlesTabColor = selectedTabColor
-        reactionsTabColor = unselectedTabColor
-        wordsTabColor = unselectedTabColor
-      } else if (category == 'reactions') {
-        foodTabColor = unselectedTabColor
-        doodlesTabColor = unselectedTabColor
-        reactionsTabColor = selectedTabColor
-        wordsTabColor = unselectedTabColor
-      } else if (category == 'words') {
-        foodTabColor = unselectedTabColor
-        doodlesTabColor = unselectedTabColor
-        reactionsTabColor = unselectedTabColor
-        wordsTabColor = selectedTabColor
-      }
+    let selectedTabColor = '#eaeaea'
+    let unselectedTabColor = '#bababa'
 
-      //clicking on sticker tabs
-      //food tab
-      if (typeof foodTabColor === 'string') {
-        fill(foodTabColor)
-        stroke('#afafaf')
-        rect(200 + 90, 359, 35, 88.75, 0, 9, 0, 0)
-        push()
-        translate(300, 380)
-        rotate(radians(90))
-        fill('black')
-        strokeWeight(0.2)
-        textSize(16)
-        text("Foods", 0, 0)
-        pop()
-      } else {
-        console.log('Invalid color for foodTabColor:', foodTabColor);
-      }
+    let foodTabColor
+    let doodlesTabColor
+    let reactionsTabColor
+    let wordsTabColor
+
+    fill("#eaeaea")
+    strokeWeight(1)
+    rect(100, 359, 100 + 90 + 35, (50 * 6) + (5 * 6) + 25, 0, 9, 9, 0)
+
+    // if (category == 'foods') {
+    //   foodTabColor = selectedTabColor
+    //   doodlesTabColor = unselectedTabColor
+    //   reactionsTabColor = unselectedTabColor
+    //   wordsTabColor = unselectedTabColor
+    // } else if (category == 'doodles') {
+    //   foodTabColor = unselectedTabColor
+    //   doodlesTabColor = selectedTabColor
+    //   reactionsTabColor = unselectedTabColor
+    //   wordsTabColor = unselectedTabColor
+    // } else if (category == 'reactions') {
+    //   foodTabColor = unselectedTabColor
+    //   doodlesTabColor = selectedTabColor
+    //   reactionsTabColor = unselectedTabColor
+    //   wordsTabColor = unselectedTabColor
+    // }
+
+    //food tab
+    fill(selectedTabColor)
+    rect(200 + 90, 359, 35, 88.75, 0, 9, 0, 0)
+    push()
+    translate(300, 380)
+    rotate(radians(90))
+    fill('black')
+    strokeWeight(0.2)
+    textSize(16)
+    text("Foods", 0, 0)
+    pop()
 
       //doodles tab
       if (typeof doodlesTabColor === 'string') {

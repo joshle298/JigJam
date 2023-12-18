@@ -76,42 +76,9 @@ io.on('connection', function(socket) {
         // socket.broadcast.emit('new_player', allPlayers[myId]);
     });
 
-    // listen for new stickies that are added
-    socket.on('new_sticky', function(msg) {
-        console.log("a new sticky has been added by one of our clients: ", msg);
-        // store new layer in our layers array
-        layers.set(msg.uniqueID, msg.layer);
-
-        // send this out to all other clients along with the layer id
-        socket.broadcast.emit('new_sticky', msg);
-    });
-
-    // listen for new stickers that are added
-    
-
-    // listen for new shapes that are added
-    socket.on('new_shape', function(msg) {
-        console.log("a new shape has been added by one of our clients: ", msg);
-        // store new layer in our layers array
-        layers.set(msg.uniqueID, msg.layer);
-
-        // send this out to all other clients along with the layer id
-        socket.broadcast.emit('new_shape', msg);
-    });
-
-    // listen for new lines that are added
-    socket.on('new_line', function(msg) {
-        console.log("a new line has been added by one of our clients: ", msg);
-        // store new layer in our layers array
-        layers.set(msg.uniqueID, msg.layer);
-
-        // send this out to all other clients along with the layer id
-        socket.broadcast.emit('new_line', msg);
-    });
-
-    // listen for new text that is added
-    socket.on('new_text', function(msg) {
-        console.log("a new text has been added by one of our clients: ", msg);
+    // listen for new layers that are added
+    socket.on('new_layer', function(msg) {
+        console.log("a new layer has been added by one of our clients: ", msg);
         // store new layer in our layers array
         layers.set(msg.uniqueID, msg.layer);
 

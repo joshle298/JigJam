@@ -19,8 +19,7 @@ class Shape {
         //show shape depending on what is selected
         fill(shapeCols[this.col])
         push()
-        noStroke()
-        if (this.shapeID == 0) {
+        if (this.id == 0) {
         ellipseMode(CORNER)
         ellipse(this.x + offsetX, this.y + offsetY, this.s)
         } else if (this.shapeID == 1) {

@@ -32,9 +32,8 @@ class Sticky {
       //sticky text
       fill(0)
       textWrap(CHAR)
-      text(this.txt, this.x + offsetX + 5, this.y + offsetY + 15, this.s - 10, this.s - 20)
-      pop()
-
+      text(this.txt, this.x + offsetX + 5, this.y + offsetY + 5, this.s - 10, this.s - 20)
+  
       //creator name
       push()
       noStroke()
