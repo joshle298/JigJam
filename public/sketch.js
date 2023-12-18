@@ -193,7 +193,7 @@ function preload() {
      console.log("A new text has been added!");
      console.log(msg);
      newText = createGraphics(width + gridSize, height + gridSize);
-     newText.content = new TextBoxComp(msg.layer.x, msg.layer.y, msg.layer.w, msg.layer.h, msg.uniqueID);
+     newText.content = new TextBox(msg.layer.x, msg.layer.y, msg.layer.w, msg.layer.h, msg.uniqueID);
      newText.content.selected = false;
      newText.content.txtInput.hide()
      currSelecting = false;
@@ -1047,11 +1047,24 @@ function draw() {
     if (mouseX >= 10 && mouseX <= 90 && mouseY >= 450 && mouseY <= 530 && mouseIsPressed && !currSelecting) {
       mouseIsPressed = false
 
+      let uniqueID = createUniqueID();
       temp = createGraphics(width + gridSize, height + gridSize)
-      temp.content = new TextBox(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100)
-
-      let uniqueID = Math.floor(Date.now() + Math.random());
+      temp.content = new TextBox(width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 200, 100);
       layers.set(uniqueID, temp);
+      
+      temp.content.id = uniqueID;
+      // tell all other users that we have added a new text layer
+      socket.emit('new_text', {
+        uniqueID: uniqueID, 
+        layer: {
+          txt: temp.content.txt,
+          txtSz: temp.content.txtSz,
+          x: temp.content.x,
+          y: temp.content.y,
+          w: temp.content.w,
+          h: temp.content.h,
+        }
+      });
 
       showStickies = false
       showStickers = false
