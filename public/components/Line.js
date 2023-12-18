@@ -30,8 +30,8 @@ class Line {
       if (this.selected) {
         push() //selection box
         noFill()
-        strokeWeight(4)
-        stroke("purple")
+        strokeWeight(1)
+        stroke("#d4d4d4")
         rectMode(RADIUS)
         rect(
           Math.min(this.x1, this.x2) + abs(this.x1 - this.x2) / 2 + offsetX,
