@@ -755,17 +755,14 @@ function draw() {
         if (mouseX >= 120 && mouseX <= 120 + 57 && mouseY >= 285 + tabOffset2 && mouseY <= 285 + tabOffset2 + 57 && mouseIsPressed && !currSelecting) {
           mouseIsPressed = false
 
-          let uniqueID = Math.floor(Date.now() + Math.random());
-          temp = createGraphics(width + gridSize, height + gridSize)
-          temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName, uniqueID);
-          // temp.content.txtInput.style.position = "fixed"
-          // temp.content.txtInput.style.zIndex = String(i)
-          // console.log(temp.content.txtInput.style.zIndex)
-          layers.set(uniqueID, temp);
+        let uniqueID = createUniqueID();
+        temp = createGraphics(width + gridSize, height + gridSize)
+        temp.content = new Sticky(stickyCols[i], width / 2 - 50 - offsetX, height / 2 - 50 - offsetY, 100, creatorName, uniqueID);
+        layers.set(uniqueID, temp);
+        
+        temp.content.id = uniqueID;
 
-          temp.content.id = uniqueID;
-
-          socket.emit('new_layer', {
+          socket.emit('new_sticky', {
             uniqueID: uniqueID,
             layer: {
               col: [temp.content.col.levels[0], temp.content.col.levels[1], temp.content.col.levels[2]], // Convert the color to an RGB array
