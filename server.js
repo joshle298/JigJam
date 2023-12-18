@@ -87,7 +87,14 @@ io.on('connection', function(socket) {
     });
 
     // listen for new stickers that are added
-    
+    socket.on('new_sticker', function(msg) {
+        console.log("a new sticker has been added by one of our clients: ", msg);
+        // store new layer in our layers array
+        layers.set(msg.uniqueID, msg.layer);
+
+        // send this out to all other clients along with the layer id
+        socket.broadcast.emit('new_sticker', msg);
+    });
 
     // listen for new shapes that are added
     socket.on('new_shape', function(msg) {
