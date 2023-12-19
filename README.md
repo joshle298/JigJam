@@ -5,7 +5,7 @@ Figma’s collaborative whiteboard platform. There are many features that FigJam
 Our remake is called JigJam. It is a multi-user whiteboard where users can collaboratively add, delete, and modify graphics on a canvas in real-time. When first opening JigJam, users are prompted to enter their name. Users then advance to the home screen with options for different “rooms” or canvases to edit (work in progress currently; only one room is available). Once selecting a room, users will advance to the multi-user canvas.  
 
 ## 📽️ Demo
-![E1CCDCBE-E82E-448C-8A49-033AAE50458A_1_102_o](https://github.com/joshle298/JigJam/assets/59464508/fb8ef6c9-7155-409c-829e-2214865e2318)
+https://github.com/joshle298/JigJam/assets/59464508/6951a75e-0fdb-413d-a454-d94544615b5e
 
 ## 🛠️ Todo
 - Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
