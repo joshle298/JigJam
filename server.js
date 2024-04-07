@@ -1,5 +1,5 @@
 // define the port that this project should listen on
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // set up express
 const express = require('express');
@@ -35,7 +35,7 @@ app.get("/", function(request, response) {
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {
-    console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀`);
+    console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀 Listening on port ${port}`);
 });
 
 // keep track of all users in canvas
