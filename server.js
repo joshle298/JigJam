@@ -1,6 +1,9 @@
+require('./db.js');
+const mongoose = require('mongoose');
+const dotenv = require("dotenv")
+dotenv.config()
 // define the port that this project should listen on
 const port = process.env.PORT || 3000;
-
 // set up express
 const express = require('express');
 const app = express();
@@ -21,6 +24,9 @@ const uniqid = require('uniqid');
 const fs = require('fs');
 const htmlFile = fs.readFileSync('./public/sketch.js', 'utf-8');
 
+const Layer = mongoose.model('Layer');
+const User = mongoose.model('User');
+
 // tell the server to send out the HTML file for this demo when it gets contacted
 app.get("/", function(request, response) {
     // tell the user they should expect HTML
@@ -32,6 +38,8 @@ app.get("/", function(request, response) {
     // tell the browser we are done!
     response.end();
 });
+
+app.post("/api/username")
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {

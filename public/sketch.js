@@ -88,6 +88,10 @@ let recordSpeed = 0.6;
 
 let needleRot = 0;
 
+function setUsername(username) {
+
+}
+
 function preload() {
    // send messages to all other clients in the canvas
    socket = io();
@@ -401,7 +405,7 @@ function draw() {
     text("jigjam", width / 2, height / 2 - 150);
     pop()
     textSize(25);
-    text("Enter your nickname", width / 2 - 150, height / 2);
+    text("Enter your username", width / 2 - 150, height / 2);
 
     //create button
     fill('#D3FF8A')
@@ -425,6 +429,8 @@ function draw() {
 
         }
 
+        setUsername(creatorName.value());
+        
         hasNameInput = true
         mouseIsPressed = false
         mode = 1
