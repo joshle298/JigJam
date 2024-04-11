@@ -1,5 +1,6 @@
 require('./db.js');
 const mongoose = require('mongoose');
+const sanitize = require('mongo-sanitize');
 const dotenv = require("dotenv")
 dotenv.config()
 // define the port that this project should listen on
@@ -7,6 +8,8 @@ const port = process.env.PORT || 3000;
 // set up express
 const express = require('express');
 const app = express();
+
+app.use(express.json());
 
 // set up the 'public' folder to serve static content to the user
 app.use( express.static('public') );
@@ -39,7 +42,22 @@ app.get("/", function(request, response) {
     response.end();
 });
 
-app.post("/api/username")
+app.post("/api/user/create", async (req, res) => {
+    try {
+        const user = new User({
+            username: sanitize(req.body.user),
+            color: sanitize(req.body.color)
+        });
+
+        await user.save();
+        console.log(`User ${user.username} added`);
+        res.status(201).json({ message: 'User successfully created' });
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {

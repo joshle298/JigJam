@@ -62,6 +62,7 @@ let showWordsStickers = false;
 let creatorName;
 let nicknameDiv;
 let hasNameInput = true
+let chosenCursorColor = true
 let activeUsers = [] //array for active user icons 
 
 // room previews
@@ -88,9 +89,33 @@ let recordSpeed = 0.6;
 
 let needleRot = 0;
 
-function setUsername(username) {
+function createUser(user) {
+  let userObj = {
+    user: user,
+    color: "testing red"
+  };
 
+  let userData = JSON.stringify(userObj);
+
+  fetch("http://localhost:3000/api/user/create", {
+    method: 'post',
+    body: userData,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  }).then((res) => {
+    console.log("Post successfully created!");
+  }).catch((error) => {
+    console.log(error);
+  });
 }
+
 
 function preload() {
    // send messages to all other clients in the canvas
@@ -384,7 +409,7 @@ function draw() {
     text("jigjam", 50, 70)
     pop()
 
-    //nickname container
+    //username container
     push()
     let rectWidth = 800;
     let rectHeight = 500;
@@ -429,8 +454,8 @@ function draw() {
 
         }
 
-        setUsername(creatorName.value());
-        
+        createUser(creatorName.value());
+
         hasNameInput = true
         mouseIsPressed = false
         mode = 1
