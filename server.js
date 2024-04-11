@@ -29,6 +29,7 @@ const htmlFile = fs.readFileSync('./public/sketch.js', 'utf-8');
 
 const Layer = mongoose.model('Layer');
 const User = mongoose.model('User');
+const Room = mongoose.model('Room');
 
 // tell the server to send out the HTML file for this demo when it gets contacted
 app.get("/", function(request, response) {
@@ -40,6 +41,22 @@ app.get("/", function(request, response) {
 
     // tell the browser we are done!
     response.end();
+});
+
+app.post("/api/room/join", async (req, res) => {
+    try {
+        const roomJoin = new Room({
+            username: sanitize(req.body.username),
+            roomNumber: sanitize(req.body.roomNumber),
+        });
+
+        await roomJoin.save();
+        console.log(`User ${roomJoin.username} joined room ${roomJoin.roomNumber}`);
+        res.status(201).json({ message: 'User successfully joined the room' });
+    } catch (error) {
+        console.error('Error joining room:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 app.post("/api/user/create", async (req, res) => {

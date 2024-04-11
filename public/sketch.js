@@ -89,6 +89,7 @@ let recordSpeed = 0.6;
 
 let needleRot = 0;
 
+// AJAX API endpoint for creating a user
 function createUser(user) {
   let userObj = {
     user: user,
@@ -116,6 +117,33 @@ function createUser(user) {
   });
 }
 
+// AJAX API endpoint for selecting a room
+function joinRoom(room) {
+  let roomObj = {
+    username: room.user,
+    roomNumber: room.number
+  };
+
+  let roomData = JSON.stringify(roomObj);
+
+  fetch("http://localhost:3000/api/room/join", {
+    method: 'post',
+    body: roomData,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  }).then((res) => {
+    console.log("Post successfully created!");
+  }).catch((error) => {
+    console.log(error);
+  });
+}
 
 function preload() {
    // send messages to all other clients in the canvas
@@ -531,27 +559,40 @@ function draw() {
         if(mouseIsPressed && mouseX > x && mouseX < x + rectWidth && mouseY > y && mouseY < y + rectHeight){
           mouseIsPressed = false
           mode = 2
-        
+          joinRoom({
+            user: creatorName.value(),
+            number: 1
+          });
         }
+
+        // TODO: add multi-room implementation
 
       } else if (i % 3 === 1) { //room 2
         text("Room 2", x + 15, y + 27)
         text("0", x + rectWidth - 40, y + 27)
-        push()
-        textSize(14)
-        text("Multi room feature coming soon!", x + 50, y + 120)
-        pop()
+        if(mouseIsPressed && mouseX > x && mouseX < x + rectWidth && mouseY > y && mouseY < y + rectHeight){
+          mouseIsPressed = false
+          mode = 2
+          joinRoom({
+            user: creatorName.value(),
+            number: 2
+          });
+        }
         //[insert preview here]
 
       } else { //room 3
         text("Room 3", x + 15, y + 27)
         text("0", x + rectWidth - 40, y + 27)
-        push()
-        textSize(14)
-        text("Multi room feature coming soon!", x + 50, y + 120)
-        pop()
-        //[insert preview here]
 
+        if(mouseIsPressed && mouseX > x && mouseX < x + rectWidth && mouseY > y && mouseY < y + rectHeight){
+          mouseIsPressed = false
+          mode = 2
+          joinRoom({
+            user: creatorName.value(),
+            number: 3
+          });
+        }
+        //[insert preview here]
       }
       
     }

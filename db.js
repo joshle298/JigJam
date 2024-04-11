@@ -36,5 +36,12 @@ const UserSchema = new mongoose.Schema({
     // email: {type: String, required: true},
   });
 
+// room shchema
+const RoomSchema = new mongoose.Schema({
+    username: {type: String, required: true},
+    roomNumber: {type: String, required: true},
+  });
+
 mongoose.model('Layer', LayerSchema);
 mongoose.model('User', UserSchema);
+mongoose.model('Room', RoomSchema);
