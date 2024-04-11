@@ -1,9 +1,15 @@
+require('./db.js');
+const mongoose = require('mongoose');
+const sanitize = require('mongo-sanitize');
+const dotenv = require("dotenv")
+dotenv.config()
 // define the port that this project should listen on
 const port = process.env.PORT || 3000;
-
 // set up express
 const express = require('express');
 const app = express();
+
+app.use(express.json());
 
 // set up the 'public' folder to serve static content to the user
 app.use( express.static('public') );
@@ -21,6 +27,10 @@ const uniqid = require('uniqid');
 const fs = require('fs');
 const htmlFile = fs.readFileSync('./public/sketch.js', 'utf-8');
 
+const Layer = mongoose.model('Layer');
+const User = mongoose.model('User');
+const Room = mongoose.model('Room');
+
 // tell the server to send out the HTML file for this demo when it gets contacted
 app.get("/", function(request, response) {
     // tell the user they should expect HTML
@@ -32,6 +42,39 @@ app.get("/", function(request, response) {
     // tell the browser we are done!
     response.end();
 });
+
+app.post("/api/room/join", async (req, res) => {
+    try {
+        const roomJoin = new Room({
+            username: sanitize(req.body.username),
+            roomNumber: sanitize(req.body.roomNumber),
+        });
+
+        await roomJoin.save();
+        console.log(`User ${roomJoin.username} joined room ${roomJoin.roomNumber}`);
+        res.status(201).json({ message: 'User successfully joined the room' });
+    } catch (error) {
+        console.error('Error joining room:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+app.post("/api/user/create", async (req, res) => {
+    try {
+        const user = new User({
+            username: sanitize(req.body.user),
+            color: sanitize(req.body.color)
+        });
+
+        await user.save();
+        console.log(`User ${user.username} added`);
+        res.status(201).json({ message: 'User successfully created' });
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {
