@@ -102,10 +102,11 @@ An Example Layer:
 ## AJAX w/API Endpoints (2 Forms)
 
 * [`api/room/join`](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/public/sketch.js#L129)
-* [`api/user/create](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/public/sketch.js#L101)
+* [`api/user/create`](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/public/sketch.js#L101)
 
-### POST/GET Data (MongoDB) Demo
+### POST/GET API & DATA (MongoDB) Demo
 
+https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3d704e3dc
 
 ## [Progress on Differential Synchronization Research Topic](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/db.js#L30)
 
