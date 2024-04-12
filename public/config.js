@@ -1,3 +1,3 @@
 const config = {
-    apiBaseUrl: 'http://localhost:3000/'
+    apiBaseUrl: 'https://jigjam.live/'
 };
