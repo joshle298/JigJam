@@ -27,6 +27,8 @@ const LayerSchema = new mongoose.Schema({
     text: String,
     color: String
 }, {timestamps: true});
+// by attatching timestamps to each layer when consecutive edits are made, the timestamp that is 
+// more recent will take precedence
 
 // user shchema
 const UserSchema = new mongoose.Schema({

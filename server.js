@@ -59,6 +59,20 @@ app.post("/api/room/join", async (req, res) => {
     }
 });
 
+app.get("/api/rooms", async (req, res) => {
+    try {
+        const rooms = await Room.find(); 
+        if (rooms.length === 0) {
+            // no entries found
+            return res.status(404).json({ message: 'No room join entries found' });
+        }
+        res.status(200).json(rooms);  // sends list of room join entries as JSON
+    } catch (error) {
+        console.error('Error retrieving room join entries:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 app.post("/api/user/create", async (req, res) => {
     try {
         const user = new User({
@@ -74,6 +88,21 @@ app.post("/api/user/create", async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+app.get("/api/users", async (req, res) => {
+    try {
+        const users = await User.find(); 
+        if (users.length === 0) {
+            // no users found
+            return res.status(404).json({ message: 'No users found' });
+        }
+        res.status(200).json(users);  // sends list of users as JSON
+    } catch (error) {
+        console.error('Error retrieving users:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 
 // start up the server (go to your browser and visit localhost:port)
