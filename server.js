@@ -75,6 +75,7 @@ app.get("/api/rooms", async (req, res) => {
 
 app.post("/api/user/create", async (req, res) => {
     try {
+        console.log(`REQ.BODY: ${req.body}`);
         const user = new User({
             username: sanitize(req.body.user),
             color: sanitize(req.body.color)
