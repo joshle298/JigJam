@@ -11,9 +11,6 @@ const app = express();
 
 app.use(express.json());
 
-const cors = require("cors");
-app.use(cors());
-
 // set up the 'public' folder to serve static content to the user
 app.use( express.static('public') );
 

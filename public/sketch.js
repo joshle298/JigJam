@@ -99,7 +99,6 @@ function createUser(user) {
   let userData = JSON.stringify(userObj);
 
   fetch(`${config.apiBaseUrl}api/user/create`, {
-    mode: 'no-cors',
     method: 'post',
     body: userData,
     headers: {
@@ -128,7 +127,6 @@ function joinRoom(room) {
   let roomData = JSON.stringify(roomObj);
 
   fetch(`${config.apiBaseUrl}api/room/join`, {
-    mode: 'no-cors',
     method: 'post',
     body: roomData,
     headers: {
