@@ -96,15 +96,15 @@ An Example Layer:
 1. [p5.js docs](https://p5js.org/reference/) - [sketch.js](./public/sketch.js): used for custom graphic/layer tools + canvas
 
 ## 🛠️ Todo
-- Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
-- Multi-Canvas experience
-- Google-authentication login for users
-- /# of users in canvas and who
-- Live cursor tracking
-- Storing the current state of canvases for new users
-- More tools!
-- Commenting
-- And so much more!!
+- [x] Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
+- [ ] Multi-Canvas experience
+- [ ]Google-authentication login for users
+- [ ] /# of users in canvas and who
+- [ ] Live cursor tracking
+- [ ] Storing the current state of canvases for new users
+- [ ] More tools!
+- [ ] Commenting
+- [ ]And so much more!!
 
 ## 🌐 Running Local Instance of JigJam
 1. `npm install` (only do once globally)
