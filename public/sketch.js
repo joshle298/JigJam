@@ -98,7 +98,7 @@ function createUser(user) {
 
   let userData = JSON.stringify(userObj);
 
-  fetch("http://localhost:3000/api/user/create", {
+  fetch(`${config.apiBaseUrl}api/user/create`, {
     method: 'post',
     body: userData,
     headers: {
@@ -126,7 +126,7 @@ function joinRoom(room) {
 
   let roomData = JSON.stringify(roomObj);
 
-  fetch("http://localhost:3000/api/room/join", {
+  fetch(`${config.apiBaseUrl}api/room/join`, {
     method: 'post',
     body: roomData,
     headers: {
