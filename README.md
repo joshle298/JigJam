@@ -4,7 +4,7 @@
 Figma’s collaborative whiteboard platform. There are many features that FigJam offers, but we decided to focus on a few canvas/graphics tools and implemented them to work in a multi-user experience. FigJam has become an essential tool for real-time brainstorming, visualizing, and collaborating (especially in developing this project), so we thought it would be a fun challenge to recreate!
 Our remake is called JigJam. It is a multi-user whiteboard where users can collaboratively add, delete, and modify graphics on a canvas in real-time. When first opening JigJam, users are prompted to enter their name. Users then advance to the home screen with options for different “rooms” or canvases to edit (work in progress currently; only one room is available). Once selecting a room, users will advance to the multi-user canvas.  
 
-## 📽️ [Video Demo](https://github.com/joshle298/JigJam/assets/59464508/039202b9-2d5b-408c-93cb-c8bcf49767d3)
+## 📽️ ![Video Demo](https://github.com/joshle298/JigJam/assets/59464508/039202b9-2d5b-408c-93cb-c8bcf49767d3)
 
 # 📍 Milestone 1
 
@@ -95,6 +95,18 @@ An Example Layer:
 
 1. [p5.js docs](https://p5js.org/reference/) - [sketch.js](./public/sketch.js): used for custom graphic/layer tools + canvas
 
+# 📍 Milestone 2
+
+## AJAX w/API Endpoints (2 Forms)
+
+* [`api/room/join`](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/public/sketch.js#L129)
+* [`api/user/create](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/public/sketch.js#L101)
+
+### POST/GET Data (MongoDB) Demo
+
+
+## [Progress on Differential Synchronization Research Topic](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/db.js#L30)
+
 ## 🛠️ Todo
 - [x] Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
 - [ ] Multi-Canvas experience
@@ -110,5 +122,3 @@ An Example Layer:
 1. `npm install` (only do once globally)
 2. `npx nodemon server.js`
 3. Navigate to `localhost:3000`
-
-# 📍 Milestone 2
