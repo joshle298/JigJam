@@ -98,7 +98,7 @@ function createUser(user) {
 
   let userData = JSON.stringify(userObj);
 
-  fetch("https://jigjam.live/api/user/create", {
+  fetch("http://localhost:3000/api/user/create", {
     method: 'post',
     body: userData,
     headers: {
@@ -126,7 +126,7 @@ function joinRoom(room) {
 
   let roomData = JSON.stringify(roomObj);
 
-  fetch("https://jigjam.live/api/join/room", {
+  fetch("http://localhost:3000/api/room/join", {
     method: 'post',
     body: roomData,
     headers: {
@@ -583,7 +583,7 @@ function draw() {
       } else { //room 3
         text("Room 3", x + 15, y + 27)
         text("0", x + rectWidth - 40, y + 27)
-        
+
         if(mouseIsPressed && mouseX > x && mouseX < x + rectWidth && mouseY > y && mouseY < y + rectHeight){
           mouseIsPressed = false
           mode = 2
