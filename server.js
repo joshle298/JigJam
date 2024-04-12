@@ -85,7 +85,7 @@ app.post("/api/user/create", async (req, res) => {
 
 
 // start up the server (go to your browser and visit localhost:port)
-server.listen(port, () => {
+server.listen(PORT, () => {
     console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀 Server running on http://${HOST}:${PORT}`);
 });
 
