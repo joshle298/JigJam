@@ -110,6 +110,7 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 
 ## [Progress on Differential Synchronization Research Topic](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/db.js#L30)
 
+# Miscellaneous (not related to AIT project guidelines)
 ## 🛠️ Todo
 - [x] Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
 - [ ] Multi-Canvas experience
