@@ -4,12 +4,20 @@ const sanitize = require('mongo-sanitize');
 const dotenv = require("dotenv")
 dotenv.config()
 // define the port that this project should listen on
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 'localhost';
 // set up express
 const express = require('express');
 const app = express();
 
 app.use(express.json());
+
+const cors = require('cors');
+
+// Configure CORS
+app.use(cors({
+    origin: 'https://jigjam.live'
+}));
 
 // set up the 'public' folder to serve static content to the user
 app.use( express.static('public') );
@@ -78,7 +86,7 @@ app.post("/api/user/create", async (req, res) => {
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {
-    console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀 Listening on port ${port}`);
+    console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀 Server running on http://${HOST}:${PORT}`);
 });
 
 // keep track of all users in canvas
