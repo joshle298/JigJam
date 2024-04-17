@@ -114,8 +114,8 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 ## 🛠️ Todo
 - [x] Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
 - [ ] Multi-Canvas experience
-- [ ]Google-authentication login for users
-- [ ] /# of users in canvas and who
+- [ ] Google-authentication login for users
+- [ ] # of users in canvas and who
 - [ ] Live cursor tracking
 - [ ] Storing the current state of canvases for new users
 - [ ] More tools!
