@@ -795,7 +795,6 @@ function draw() {
           y1: temp.content.y1,
           x2: temp.content.x2,
           y2: temp.content.y2,
-          id: uniqueID
         },
         author: creatorName.value()
       } 

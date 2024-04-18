@@ -261,10 +261,25 @@ io.on('connection', function(socket) {
         layer.y1 = msg.y1;
         layer.x2 = msg.x2;
         layer.y2 = msg.y2;
-
-        
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_line', msg);
+
+        const newLayerAtrs = {
+            col: layer.col,
+            x1: layer.x1,
+            y1: layer.y1,
+            x2: layer.x2,
+            y2: layer.y2
+        };
+
+        // update in db
+        Layer.findOneAndUpdate(
+            { uniqueID: msg.id }, // This filters the document to find by uniqueID
+            { $set: { layerAttributes: newLayerAtrs } }, // This sets the new values for layerAttributes
+            { new: true } // This option returns the document after the update has been applied
+        ).catch(err => {
+            console.error("Error updating the document:", err);
+        });        
     });
 
     // listen for line weight changes
