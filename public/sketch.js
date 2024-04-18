@@ -185,6 +185,16 @@ function getPrevLayers() {
 
 async function setPrevLayers() {
   const prevLayers = await getPrevLayers();
+
+  prevLayers.forEach((layer) => {
+    temp = createGraphics(width + gridSize, height + gridSize)
+    const layerAtrs = layer.layerAttributes;
+    temp.content = new Line(layerAtrs.col, layerAtrs.x1, layerAtrs.y1, layerAtrs.x2, layerAtrs.y2, layer.uniqueID)
+    temp.content.selected = false;
+    currSelecting = false;
+    layers.set(layer.uniqueID, temp);
+  })
+
   console.log(prevLayers);
 }
 
@@ -784,7 +794,8 @@ function draw() {
           x1: temp.content.x1,
           y1: temp.content.y1,
           x2: temp.content.x2,
-          y2: temp.content.y2
+          y2: temp.content.y2,
+          id: uniqueID
         },
         author: creatorName.value()
       } 

@@ -137,6 +137,14 @@ app.post("/api/layers/create", async (req, res) => {
     }
 });
 
+async function fetchPrevLayers() {
+    // init all layers from db
+    const prevLayers = await Layer.find();
+    prevLayers.forEach((layer) => {
+        layers.set(layer.uniqueID,layer.layerAttributes);
+    });
+}
+
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {
     console.log(`Heigh-Ho, Heigh-Ho, off to the internet we go! 🚀 Listening on port ${port}`);
@@ -147,6 +155,7 @@ let users = new Map();
 
 // keep track of all layers within canvas
 let layers = new Map();
+fetchPrevLayers();
 
 // whenever a client connects to the server
 io.on('connection', function(socket) {
@@ -246,7 +255,6 @@ io.on('connection', function(socket) {
     // listen for line movements
     socket.on('move_line', function(msg) {
         console.log("a line has been moved by one of our clients: ", msg);
-        console.log(layers);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
         layer.x1 = msg.x1;
@@ -254,6 +262,7 @@ io.on('connection', function(socket) {
         layer.x2 = msg.x2;
         layer.y2 = msg.y2;
 
+        
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_line', msg);
     });
