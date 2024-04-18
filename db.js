@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 const dotenv = require("dotenv")
 dotenv.config()
 
-mongoose.connect(process.env.DATABASE_URL);
+// PROD
+// mongoose.connect(process.env.DATABASE_URL);
+
+// LOCAL/TEST
+mongoose.connect(process.env.TEST_DSN);
 
 // layer schema (optional fields scale, author, text, and color)
 const LayerSchema = new mongoose.Schema({

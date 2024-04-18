@@ -106,6 +106,7 @@ app.get("/api/users", async (req, res) => {
 app.get("/api/layers", async (req, res) => {
     try {
         const layers = await Layer.find();
+        // handle no layers
         if (layers.length === 0) {
             // no layers found
             return res.status(404).json({ message: 'No layers found' });

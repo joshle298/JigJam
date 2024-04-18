@@ -99,7 +99,7 @@ function createUser(user) {
   let userData = JSON.stringify(userObj);
 
   fetch(`${config.apiBaseUrl}api/user/create`, {
-    method: 'post',
+    method: 'POST',
     body: userData,
     headers: {
         'Accept': 'application/json',
@@ -127,8 +127,31 @@ function joinRoom(room) {
   let roomData = JSON.stringify(roomObj);
 
   fetch(`${config.apiBaseUrl}api/room/join`, {
-    method: 'post',
+    method: 'POST',
     body: roomData,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  }).then((res) => {
+    console.log("Room successfully joined!");
+  }).catch((error) => {
+    console.log(error);
+  });
+}
+
+function createLayer(layer) {
+  let layerData = JSON.stringify(layer);
+
+  // AJAX API endpoint for posting a layer
+  fetch(`${config.apiBaseUrl}api/layers/create`, {
+    method: 'POST',
+    body: layerData,
     headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
@@ -145,27 +168,24 @@ function joinRoom(room) {
   });
 }
 
-function createLayer(layer) {
-  let layerData = JSON.stringify(layer);
-
+function getPrevLayers() {
   // AJAX API endpoint for posting a layer
-  fetch(`${config.apiBaseUrl}api/layers/create`, {
-    method: 'post',
-    body: layerData,
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
+  return fetch(`${config.apiBaseUrl}api/layers`, {
+    method: 'GET',
   }).then((response) => {
     if (response.ok) {
       return response.json();
     }
     throw new Error('Network response was not ok.');
-  }).then((res) => {
-    console.log("Post successfully created!");
   }).catch((error) => {
     console.log(error);
+    throw error;
   });
+}
+
+async function setPrevLayers() {
+  const prevLayers = await getPrevLayers();
+  console.log(prevLayers);
 }
 
 function preload() {
@@ -586,6 +606,8 @@ function draw() {
             user: creatorName.value(),
             number: 1
           });
+
+          setPrevLayers();
         }
 
         // TODO: add multi-room implementation
