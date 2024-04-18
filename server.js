@@ -98,12 +98,43 @@ app.get("/api/users", async (req, res) => {
         }
         res.status(200).json(users);  // sends list of users as JSON
     } catch (error) {
-        console.error('Error retrieving users:', error);
+        console.error('Error retrieving users: ', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 
+app.get("/api/layers", async (req, res) => {
+    try {
+        const layers = await Layer.find();
+        if (layers.length === 0) {
+            // no layers found
+            return res.status(404).json({ message: 'No layers found' });
+        }
 
+        return res.status(200).json(layers);
+    } catch(err) {
+        console.error('Error retrieving layers: ', err);
+        res.status(500).json({ message: 'Internal server error'});
+    }
+})
+
+app.post("/api/layers/create", async (req, res) => {
+    try {
+        const layer = new Layer({
+            uniqueID: sanitize(req.body.uniqueID),
+            graphicType: sanitize(req.body.graphicType),
+            layerAttributes: sanitize(req.body.layerAttributes),
+            author: sanitize(req.body.author)
+        });
+
+        await layer.save();
+        console.log(`Layer added: ${layer}`);
+        res.status(201).json({ message: 'Layer successfully posted' });
+    } catch (error) {
+        console.error('Error adding user:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 // start up the server (go to your browser and visit localhost:port)
 server.listen(port, () => {

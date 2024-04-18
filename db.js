@@ -15,18 +15,14 @@ const LayerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    x: {
-        type: Number,
+    layerAttributes: {
+        type: Object,
         required: true
     },
-    y: {
-        type: Number,
+    author: {
+        type: String,
         required: true
-    },
-    s: Number,
-    author: String,
-    text: String,
-    color: String
+    }
 }, {timestamps: true});
 // by attatching timestamps to each layer when consecutive edits are made, the timestamp that is 
 // more recent will take precedence

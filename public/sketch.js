@@ -145,6 +145,29 @@ function joinRoom(room) {
   });
 }
 
+function createLayer(layer) {
+  let layerData = JSON.stringify(layer);
+
+  // AJAX API endpoint for posting a layer
+  fetch(`${config.apiBaseUrl}api/layers/create`, {
+    method: 'post',
+    body: layerData,
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  }).then((res) => {
+    console.log("Post successfully created!");
+  }).catch((error) => {
+    console.log(error);
+  });
+}
+
 function preload() {
    // send messages to all other clients in the canvas
    socket = io();
@@ -718,6 +741,7 @@ function draw() {
       temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50, uniqueID)
       layers.set(uniqueID, temp);
   
+      // send layer to server
       socket.emit('new_line', {
         uniqueID: uniqueID, 
         layer: {
@@ -728,6 +752,22 @@ function draw() {
           y2: temp.content.y2
         }
       });
+
+      // package new line to be saved to db
+      newLineObj = {
+        uniqueID: uniqueID,
+        graphicType: 'line',
+        layerAttributes: {
+          col: temp.content.col,
+          x1: temp.content.x1,
+          y1: temp.content.y1,
+          x2: temp.content.x2,
+          y2: temp.content.y2
+        },
+        author: creatorName.value()
+      } 
+      // send data to be saved to db (AJAX)
+      createLayer(newLineObj)
 
       showStickies = false
       showStickers = false
