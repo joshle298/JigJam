@@ -18,7 +18,9 @@ app.use( express.static('public') );
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+    wsEngine: require("eiows").Server
+});
 
 // set up the uniqid library so we can create unique identifiers for our players
 const uniqid = require('uniqid');

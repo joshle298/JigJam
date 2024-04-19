@@ -361,6 +361,11 @@ ee-first@1.1.1:
   resolved "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
+eiows@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/eiows/-/eiows-7.0.1.tgz"
+  integrity sha512-X5Sc4RhE/AFcWTbjdvuHuHe7iut75Eci8DqGsClHN1qK+xcmOW/bfbccNzRI/y+/PqaKawrBV0R1iAaxF+fICA==
+
 encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz"

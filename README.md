@@ -112,6 +112,12 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 
 # 📍 Milestone 3
 
+## AJAX w/API Endpoints
+
+## Research Topics
+
+### Load Balancing & Performance Optimizations
+
 
 
 # Miscellaneous (not related to AIT project guidelines)
