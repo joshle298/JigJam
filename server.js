@@ -293,6 +293,14 @@ io.on('connection', function(socket) {
 
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('change_weight', msg);
+
+        // Layer.findOneAndUpdate(
+        //     { uniqueID: msg.id }, // This filters the document to find by uniqueID
+        //     { $set: { layerAttributes: newLayerAtrs } }, // This sets the new values for layerAttributes
+        //     { new: true } // This option returns the document after the update has been applied
+        // ).catch(err => {
+        //     console.error("Error updating the document:", err);
+        // });       
     });
 
     // listen for color changes

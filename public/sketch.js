@@ -1,3 +1,16 @@
+document.onreadystatechange = function () {
+  var state = document.readyState
+  if (state == 'interactive') {
+       document.getElementById('scripts').style.visibility="hidden";
+  } else if (state == 'complete') {
+      setTimeout(function(){
+          document.getElementById('interactive');
+         document.getElementById('load').style.visibility="hidden";
+         document.getElementById('scripts').style.visibility="visible";
+      },1500);
+  }
+}
+
 let mode = 0
 let offsetX = 0;
 let offsetY = 0;
