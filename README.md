@@ -79,7 +79,9 @@ An Example Layer:
 
 ## Research Topics
 
-* (6 points) Use of 
+* (6 points) Use of **client-side** JavaScript library: [p5.js](https://p5js.org/)
+  * p5.js is a JS client-side frontend library used for creating graphic and interactive tools and experiences
+  * Artists and Design-heavy programmers choose p5.js as a common library to create randomly-generated art, interactive experiences, and quick components to render graphics
 
 * (4 points) Load Balancing & Performance Optimizations
     * Sending over constant data of deleting, adding, and editing layers across multiple users can eventually overload the server
@@ -112,7 +114,16 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 
 ## AJAX w/API Endpoints
 
+* `api/layers/create`
+  * This third AJAX form is used to save the current state of the canvas for new and returning users to see when they join JigJam (essentially picking up where you left off: save state).
+  * With each line that is created by any user, the layer data is sent to the server where it is then stored in the `Layer` collection in our MongoDB database. Where such data can be retrieved on-load of new users and manipulated (delete, edit, etc.)
+  * Layer data can be retrieved [here](https://jigjam.live/api/layers)
+  * The post has only been implemented for new lines. However, the movements of the lines have also been implemented. The other tools are to come soon!
+
 ## Research Topics
+
+### Use of **client-side** JavaScript library: [p5.js](https://p5js.org/)
+p5.js's library has been used heavily throughout the project thus far. The continued exploration and implementation of its frontend components have helped create almost 100% of all the front-end of JigJam. Some 
 
 ### Load Balancing & Performance Optimizations
 
