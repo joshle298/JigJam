@@ -79,17 +79,15 @@ An Example Layer:
 
 ## Research Topics
 
-* (3 points) Differential Synchronization
-    * There are many cases in which two or more users are simulatenously editing the same layer
-    * Many real-time applications deal with this issue today: Google Docs, Figma, Microsoft Suite Products, etc.
-    * Google published how they resolve this issue as well as pose other solutions [here](https://neil.fraser.name/writing/sync/)
-* (7 points) Load Balancing & Performance Optimizations
+* (6 points) Use of 
+
+* (4 points) Load Balancing & Performance Optimizations
     * Sending over constant data of deleting, adding, and editing layers across multiple users can eventually overload the server
     * To mitigate this, using Socket.io's Node.js clusters can help with performance issues when many users are connected
     * Also known as [sticky load balancing](https://socket.io/docs/v4/using-multiple-nodes#using-nodejs-cluster) as per Socket.IO docs
     * [Performance Tuning](https://socket.io/docs/v4/performance-tuning/)
 
-10 points total out of 8 required points
+10 points total out of 10 required points
 
 ## [Link to Initial Main Project File](app.mjs)
 
