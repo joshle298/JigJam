@@ -121,6 +121,10 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
   * The post has only been implemented for new lines. However, the movements of the lines have also been implemented. The other tools are to come soon!
 
 ### POST/GET Layers API & Data Demo:
+* The demo shows two separate users where, upon joining a canvas, all previously created layers are rendered
+* The rightmost page is showing the layer data retrieved and updated to the database: [https://jigjam.live/api/layers](https://jigjam.live/api/layers)
+
+https://github.com/joshle298/JigJam/assets/59464508/284c4ccc-c9a1-4415-a7ee-0211926c71ef
 
 ## Research Topics (Significant Progress)
 
