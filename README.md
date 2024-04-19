@@ -110,9 +110,14 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 
 ## [Progress on Differential Synchronization Research Topic](https://github.com/joshle298/JigJam/blob/a78544423400787e43d6cac665394dd38a96fa68/db.js#L30)
 
+# 📍 Milestone 3
+
+
+
 # Miscellaneous (not related to AIT project guidelines)
 ## 🛠️ Todo
 - [x] Migrate hosting to AWS, Google Cloud, or Heroku (and publish to JigJam's official domain)
+- [ ] Save state for all tools (only line implemented - weights)
 - [ ] Multi-Canvas experience
 - [ ] Google-authentication login for users
 - [ ] # of users in canvas and who
@@ -120,7 +125,7 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 - [ ] Storing the current state of canvases for new users
 - [ ] More tools!
 - [ ] Commenting
-- [ ]And so much more!!
+- [ ] And so much more!!
 
 ## 🌐 Running Local Instance of JigJam
 1. `npm install` (only do once globally)
