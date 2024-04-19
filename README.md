@@ -83,7 +83,7 @@ An Example Layer:
   * p5.js is a JS client-side frontend library used for creating graphic and interactive tools and experiences
   * Artists and Design-heavy programmers choose p5.js as a common library to create randomly-generated art, interactive experiences, and quick components to render graphics
 
-* (4 points) Load Balancing & Performance Optimizations
+* (4 points) Load Balancing & Performance Optimizations (server-side JS library)
     * Sending over constant data of deleting, adding, and editing layers across multiple users can eventually overload the server
     * To mitigate this, using Socket.io's Node.js clusters can help with performance issues when many users are connected
     * Also known as [sticky load balancing](https://socket.io/docs/v4/using-multiple-nodes#using-nodejs-cluster) as per Socket.IO docs
@@ -112,7 +112,7 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
 
 # 📍 Milestone 3
 
-## AJAX w/API Endpoints
+## AJAX Interaction w/API Endpoints
 
 * `api/layers/create`
   * This third AJAX form is used to save the current state of the canvas for new and returning users to see when they join JigJam (essentially picking up where you left off: save state).
@@ -120,14 +120,15 @@ https://github.com/joshle298/JigJam/assets/59464508/b20a5cfe-5a9e-4ab9-ad2f-2ac3
   * Layer data can be retrieved [here](https://jigjam.live/api/layers)
   * The post has only been implemented for new lines. However, the movements of the lines have also been implemented. The other tools are to come soon!
 
-## Research Topics
+### POST/GET Layers API & Data Demo:
+
+## Research Topics (Significant Progress)
 
 ### Use of **client-side** JavaScript library: [p5.js](https://p5js.org/)
-p5.js's library has been used heavily throughout the project thus far. The continued exploration and implementation of its frontend components have helped create almost 100% of all the front-end of JigJam. Some 
+(Used heavily [here](https://github.com/nyu-csci-ua-0467-001-002-spring-2024/final-project-joshle298/blob/bfd81260a591287a916651d99f12b39764a06116/public/sketch.js) but is not limited to most other p5.js components in the repo) p5.js's library has been used heavily throughout the project thus far. The continued exploration and implementation of its frontend components have helped create almost 100% of all the front-end of JigJam. It has been a journey navigating how to connect the nuances and quirks of Socket.io's behavior within the client-side library. The flow of creating a new front-end component and moving such data to our database to be retrieved and modified by users is complete and will be easily transferrable between the rest of the tools (only lines are available in the current working state)!
 
-### Load Balancing & Performance Optimizations
-
-When 
+### Load Balancing & Performance Optimizations (server-side JS library)
+When looking at ways to optimize the websocket server's performance, I came across a replacement module, [eiows](https://socket.io/docs/v3/server-installation/). However, after installing and deploying to my server, I realized that such implementations are either deprecated or not supported as much as socket.io's default, `ws`. Other ways I am planning to optimize the server is through [performance tuning](https://socket.io/docs/v4/performance-tuning/), where I can install `ws` native add-ons such as [bufferutil](https://www.npmjs.com/package/bufferutil) and [utf-8-validate](https://www.npmjs.com/package/utf-8-validate). Though not necessary, if for some reason JigJam reaches a substantial amount of live users at a given time, using [sticky load balancing](https://socket.io/docs/v4/using-multiple-nodes#using-nodejs-cluster) would be advantageous, which can be implemented in the next iteration.
 
 # Miscellaneous (not related to AIT project guidelines)
 ## 🛠️ Todo
