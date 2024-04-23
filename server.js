@@ -264,18 +264,17 @@ io.on('connection', function(socket) {
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('move_line', msg);
 
-        const newLayerAtrs = {
-            col: layer.col,
-            x1: layer.x1,
-            y1: layer.y1,
-            x2: layer.x2,
-            y2: layer.y2
-        };
-
         // update in db
         Layer.findOneAndUpdate(
             { uniqueID: msg.id }, // This filters the document to find by uniqueID
-            { $set: { layerAttributes: newLayerAtrs } }, // This sets the new values for layerAttributes
+            { $set: { 
+                    "layerAttributes.col": layer.col,
+                    "layerAttributes.x1": layer.x1,
+                    "layerAttributes.y1": layer.y1,
+                    "layerAttributes.x2": layer.x2,
+                    "layerAttributes.y2": layer.y2,
+                } 
+            }, // This sets the new values for layerAttributes
             { new: true } // This option returns the document after the update has been applied
         ).catch(err => {
             console.error("Error updating the document:", err);
@@ -294,13 +293,13 @@ io.on('connection', function(socket) {
         // send this out to all other clients along with the layer id
         socket.broadcast.emit('change_weight', msg);
 
-        // Layer.findOneAndUpdate(
-        //     { uniqueID: msg.id }, // This filters the document to find by uniqueID
-        //     { $set: { layerAttributes: newLayerAtrs } }, // This sets the new values for layerAttributes
-        //     { new: true } // This option returns the document after the update has been applied
-        // ).catch(err => {
-        //     console.error("Error updating the document:", err);
-        // });       
+        Layer.findOneAndUpdate(
+            { uniqueID: msg.id }, // This filters the document to find by uniqueID
+            { $set: { "layerAttributes.wt": msg.wt } }, // This sets the new values for layerAttributes
+            { new: true } // This option returns the document after the update has been applied
+        ).catch(err => {
+            console.error("Error updating the document:", err);
+        });       
     });
 
     // listen for color changes

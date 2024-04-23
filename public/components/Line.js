@@ -1,13 +1,13 @@
 //line class
 class Line {
-  constructor(col, x1, y1, x2, y2, id) {
+  constructor(col, x1, y1, x2, y2, id, wt) {
     this.col = col
     this.x1 = x1
     this.y1 = y1
     this.x2 = x2
     this.y2 = y2
-    this.wt = 2
     this.id = id
+    this.wt = (wt === undefined) ? 2 : wt;
 
     this.selected = true //start with it selecting
     currSelecting = true

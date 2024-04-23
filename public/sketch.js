@@ -198,17 +198,16 @@ function getPrevLayers() {
 
 async function setPrevLayers() {
   const prevLayers = await getPrevLayers();
-
+  console.log(prevLayers);
   prevLayers.forEach((layer) => {
     temp = createGraphics(width + gridSize, height + gridSize)
     const layerAtrs = layer.layerAttributes;
-    temp.content = new Line(layerAtrs.col, layerAtrs.x1, layerAtrs.y1, layerAtrs.x2, layerAtrs.y2, layer.uniqueID)
+    temp.content = new Line(layerAtrs.col, layerAtrs.x1, layerAtrs.y1, layerAtrs.x2, layerAtrs.y2, layer.uniqueID, layerAtrs.wt);
+    console.log(temp.content);
     temp.content.selected = false;
     currSelecting = false;
     layers.set(layer.uniqueID, temp);
   })
-
-  console.log(prevLayers);
 }
 
 function preload() {
@@ -302,7 +301,7 @@ function preload() {
      console.log("A new line has been added!");
      console.log(msg);
      newLine = createGraphics(width + gridSize, height + gridSize);
-     newLine.content = new Line(msg.layer.col, msg.layer.x1, msg.layer.y1, msg.layer.x2, msg.layer.y2, msg.uniqueID);
+     newLine.content = new Line(msg.layer.col, msg.layer.x1, msg.layer.y1, msg.layer.x2, msg.layer.y2, msg.uniqueID, msg.wt);
      newLine.content.selected = false;
      currSelecting = false;
  
@@ -783,7 +782,7 @@ function draw() {
 
       temp = createGraphics(width + gridSize, height + gridSize)
       let uniqueID = createUniqueID();
-      temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50, uniqueID)
+      temp.content = new Line(round(random(0, shapeCols.length - 1)), width / 2 - offsetX - 50, height / 2 - offsetY - 50, width / 2 - offsetX + 50, height / 2 - offsetY + 50, uniqueID, 2)
       layers.set(uniqueID, temp);
   
       // send layer to server
@@ -794,7 +793,8 @@ function draw() {
           x1: temp.content.x1,
           y1: temp.content.y1,
           x2: temp.content.x2,
-          y2: temp.content.y2
+          y2: temp.content.y2,
+          wt: temp.content.wt
         }
       });
 
@@ -808,6 +808,7 @@ function draw() {
           y1: temp.content.y1,
           x2: temp.content.x2,
           y2: temp.content.y2,
+          wt: temp.content.wt
         },
         author: creatorName.value()
       } 
