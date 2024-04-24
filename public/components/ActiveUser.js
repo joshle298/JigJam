@@ -16,7 +16,7 @@ class activeUser {
         rect(this.x, 20, 40, 40, 9)
         fill('black')
         textSize(22)
-        text(this.initial, this.x + 11.5, 47)
+        text(this.initial, this.x + 13, 47)
         pop()
     }
 

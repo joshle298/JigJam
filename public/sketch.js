@@ -53,7 +53,7 @@ let wordsTabColor
 let currTxt = "" //current content of text being edited
 
 let layers = new Map(); // map for layers with graphics
-let users = [] //array for users
+let users =  new Map();
 
 let category; //sticker category: food, doodle, reaction, or word
 
@@ -110,6 +110,13 @@ function createUser(user) {
   };
 
   let userData = JSON.stringify(userObj);
+
+  socket.emit('user_join', {
+    name: user,
+    id: socket.id
+  });
+
+  users.set(socket.id, user)
 
   fetch(`${config.apiBaseUrl}api/user/create`, {
     method: 'POST',
@@ -230,6 +237,17 @@ function preload() {
      users[message.id] = message;
    });
  
+   socket.on('user_join', async function(userArr) {
+    let newMap = await new Map(JSON.parse(userArr));
+    console.log(`new map from socket`);
+    users = newMap;
+    users.values().forEach((username, i) => {
+      const x = width - (i + 1) * (40 + 15);
+      activeUsers.push(new activeUser(username, x))
+    });
+    console.log(users);
+   });
+
      // TODO: listen for all previous users
      socket.on('all_previous_users', function(message) {
        console.log("Got all previous users!");
@@ -552,14 +570,13 @@ function draw() {
       if (creatorName.value() == "") {
         hasNameInput = false
       } else {
-        //create active users
-        for (let i = 0; i < 3; i++) {
-          const x = width - (i + 1) * (40 + 15);
-          activeUsers.push(new activeUser(creatorName.value(),x))
-
-        }
-
         createUser(creatorName.value());
+
+        //create active users
+        users.values().forEach((username, i) => {
+          const x = width - (i + 1) * (40 + 15);
+          activeUsers.push(new activeUser(username, x))
+        });
 
         hasNameInput = true
         mouseIsPressed = false

@@ -122,8 +122,9 @@ app.get("/api/layers", async (req, res) => {
 });
 
 app.get("/api/track", (req, res) => {
+    console.log(users.size)
     try {
-        if(currentSong === -1) {
+        if(currentSong === -1 || users.size === 0) {
             return res.status(200).json({ message: 'No current song playing'});
         } else {
             const track = currentSong + 1;
@@ -177,6 +178,14 @@ fetchPrevLayers();
 io.on('connection', function(socket) {
     console.log('a user connected');
 
+    let userArr = JSON.stringify(Array.from(users));
+    socket.broadcast.emit('user_join', userArr);
+
+    // update live user count
+    socket.on('disconnect', function() {
+
+    });
+
     // create a unique id for this user
     let id = uniqid();
 
@@ -189,6 +198,11 @@ io.on('connection', function(socket) {
     // Emit the layersArray to the new user
     socket.emit('initial_layers', layersArray);
 
+    socket.on('user_join', function(user) {
+        users.set(user.id, user.name);
+        const userArr = JSON.stringify(Array.from(users))
+        socket.broadcast.emit('user_join', userArr);
+    });
 
     // listen for new user messages
     socket.on('new_user', function(msg) {
