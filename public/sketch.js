@@ -203,7 +203,7 @@ async function setPrevLayers() {
     temp = createGraphics(width + gridSize, height + gridSize)
     const layerAtrs = layer.layerAttributes;
     temp.content = new Line(layerAtrs.col, layerAtrs.x1, layerAtrs.y1, layerAtrs.x2, layerAtrs.y2, layer.uniqueID, layerAtrs.wt);
-    console.log(temp.content);
+    // console.log(temp.content);
     temp.content.selected = false;
     currSelecting = false;
     layers.set(layer.uniqueID, temp);
@@ -450,6 +450,18 @@ function preload() {
     tracks.push(loadSound(filename))
   }
 
+  socket.on('song_selected', function(msg) {
+    mouseIsPressed = false
+    playing = true
+    currTrack = msg.trackNumber;
+    console.log(`track ${currTrack} is playing from another client`)
+    tracks[0].stop()
+    tracks[1].stop()
+    tracks[2].stop()
+    tracks[3].stop()
+
+    tracks[currTrack].play();
+});
 
   handTool = loadImage("icons/handTool.png");
   lineTool = loadImage("icons/lineTool.png");

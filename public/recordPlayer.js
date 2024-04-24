@@ -44,7 +44,7 @@ function displayRecordPlayer(){
     rectMode(CENTER)
     
     playTrack = tracks[currTrack-1]
-    
+
     if(playing){
         rect(460, 110, 15)
         recordRot += recordSpeed
@@ -82,6 +82,11 @@ function displayRecordPlayer(){
         tracks[2].stop()
         tracks[3].stop()
 
+        // broadcast track to all clients
+        socket.emit('song_selected', {
+            trackNumber: 0
+        });
+
         tracks[0].play()
     }
 
@@ -95,6 +100,11 @@ function displayRecordPlayer(){
         tracks[2].stop()
         tracks[3].stop()
 
+        // broadcast track to all clients
+        socket.emit('song_selected', {
+            trackNumber: 1
+        });
+        
         tracks[1].play()
     }
 
@@ -107,6 +117,11 @@ function displayRecordPlayer(){
         tracks[1].stop()
         tracks[2].stop()
         tracks[3].stop()
+
+        // broadcast track to all clients
+        socket.emit('song_selected', {
+            trackNumber: 2
+        });
 
         tracks[2].play()
     }
@@ -121,6 +136,11 @@ function displayRecordPlayer(){
         tracks[2].stop()
         tracks[3].stop()
 
+        // broadcast track to all clients
+        socket.emit('song_selected', {
+            trackNumber: 3
+        });
+
         tracks[3].play()
     }
 
@@ -132,6 +152,11 @@ function displayRecordPlayer(){
             tracks[2].stop()
             tracks[3].stop()
         } else {
+            // broadcast track to all clients
+            socket.emit('song_selected', {
+                trackNumber: currTrack - 1
+            });
+
             tracks[currTrack-1].play()
         }
         playing = !playing

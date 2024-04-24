@@ -31,6 +31,8 @@ const Layer = mongoose.model('Layer');
 const User = mongoose.model('User');
 const Room = mongoose.model('Room');
 
+let currentSong = -1;
+
 // tell the server to send out the HTML file for this demo when it gets contacted
 app.get("/", function(request, response) {
     // tell the user they should expect HTML
@@ -117,7 +119,21 @@ app.get("/api/layers", async (req, res) => {
         console.error('Error retrieving layers: ', err);
         res.status(500).json({ message: 'Internal server error'});
     }
-})
+});
+
+app.get("/api/track", (req, res) => {
+    try {
+        if(currentSong === -1) {
+            return res.status(200).json({ message: 'No current song playing'});
+        } else {
+            const track = currentSong + 1;
+            return res.status(200).json({ 'Current track playing': track });
+        }
+    } catch (err) {
+        console.error('Error retrieving current track playing: ', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 app.post("/api/layers/create", async (req, res) => {
     try {
@@ -187,6 +203,12 @@ io.on('connection', function(socket) {
 
         // // send this out to all other clients
         // socket.broadcast.emit('new_player', allPlayers[myId]);
+    });
+
+    socket.on('song_selected', function(msg) {
+        console.log(`a new song has started playing by one of our clients: track ${msg.trackNumber}`);
+        currentSong = msg.trackNumber;
+        socket.broadcast.emit('song_selected', msg);
     });
 
     // listen for new stickies that are added
