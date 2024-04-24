@@ -239,8 +239,9 @@ function preload() {
  
    socket.on('user_join', async function(userArr) {
     let newMap = await new Map(JSON.parse(userArr));
-    console.log(`new map from socket`);
+    console.log(`receive a new user map from socket`);
     users = newMap;
+    activeUsers= [];
     users.values().forEach((username, i) => {
       const x = width - (i + 1) * (40 + 15);
       activeUsers.push(new activeUser(username, x))

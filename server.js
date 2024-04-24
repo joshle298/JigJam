@@ -175,15 +175,19 @@ let layers = new Map();
 fetchPrevLayers();
 
 // whenever a client connects to the server
-io.on('connection', function(socket) {
+io.sockets.on('connection', function(socket) {
     console.log('a user connected');
 
     let userArr = JSON.stringify(Array.from(users));
-    socket.broadcast.emit('user_join', userArr);
+    socket.emit('user_join', userArr);
 
-    // update live user count
+    // remove from map
     socket.on('disconnect', function() {
-
+        console.log(socket.id);
+        users.delete(socket.id);
+        let userArr = JSON.stringify(Array.from(users));
+        console.log(users);
+        socket.broadcast.emit('user_join', userArr);
     });
 
     // create a unique id for this user
