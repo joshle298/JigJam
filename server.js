@@ -107,6 +107,14 @@ app.get("/api/users", async (req, res) => {
             // no users found
             return res.status(404).json({ message: 'No users found' });
         }
+
+        // filter for only users with a username of 3 characters or less and log in server
+        const filterByUsernameSize = (arr) => {
+            return arr.filter((entry) => entry.username.length <= 3);
+            };          
+
+        console.log(filterByUsernameSize(users));
+        
         res.status(200).json(users);  // sends list of users as JSON
     } catch (error) {
         console.error('Error retrieving users: ', error);
