@@ -63,11 +63,19 @@ app.post("/api/room/join", async (req, res) => {
 
 app.get("/api/rooms", async (req, res) => {
     try {
-        const rooms = await Room.find(); 
+        const rooms = await Room.find();
         if (rooms.length === 0) {
             // no entries found
             return res.status(404).json({ message: 'No room join entries found' });
         }
+
+        // filter for only users in room 1 and log in server
+        const filterByRoomNumber = (arr) => {
+            return arr.filter((entry) => entry.roomNumber === '1');
+          };          
+
+        console.log(filterByRoomNumber(rooms));
+
         res.status(200).json(rooms);  // sends list of room join entries as JSON
     } catch (error) {
         console.error('Error retrieving room join entries:', error);
@@ -115,6 +123,13 @@ app.get("/api/layers", async (req, res) => {
             return res.status(404).json({ message: 'No layers found' });
         }
 
+        // filter for layers with the colorId of 5 and log in server
+        const filterByColorFive = (arr) => {
+            return arr.filter((entry) => entry.layerAttributes.col === 5);
+        };          
+
+        console.log(filterByColorFive(layers));
+        
         return res.status(200).json(layers);
     } catch(err) {
         console.error('Error retrieving layers: ', err);
