@@ -280,7 +280,7 @@ io.sockets.on('connection', function(socket) {
 
     // listen for layer movements
     socket.on('move_layer', function(msg) {
-        console.log("a layer has been moved by one of our clients: ", msg);
+        // console.log("a layer has been moved by one of our clients: ", msg);
         console.log(layers);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
@@ -293,7 +293,7 @@ io.sockets.on('connection', function(socket) {
 
     // listen for line movements
     socket.on('move_line', function(msg) {
-        console.log("a line has been moved by one of our clients: ", msg);
+        // console.log("a line has been moved by one of our clients: ", msg);
         // update the layer in our layers array
         let layer = layers.get(msg.id);
         layer.x1 = msg.x1;
