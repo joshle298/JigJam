@@ -77,8 +77,9 @@ app.get("/api/rooms", async (req, res) => {
 
 app.post("/api/user/create", async (req, res) => {
     try {
+        console.log(req.body.color);
         const user = new User({
-            username: sanitize(req.body.user),
+            username: sanitize(req.body.username),
             color: sanitize(req.body.color)
         });
 
@@ -203,7 +204,9 @@ io.sockets.on('connection', function(socket) {
     socket.emit('initial_layers', layersArray);
 
     socket.on('user_join', function(user) {
-        users.set(user.id, user.name);
+        const userObj = JSON.parse(user.userData)
+        users.set(userObj.socket, userObj);
+        console.log(users);
         const userArr = JSON.stringify(Array.from(users))
         socket.broadcast.emit('user_join', userArr);
     });

@@ -103,20 +103,21 @@ let recordSpeed = 0.6;
 let needleRot = 0;
 
 // AJAX API endpoint for creating a user
-function createUser(user) {
-  let userObj = {
-    user: user,
-    color: "testing red"
-  };
+function createUser(user, socketId) {
+  const colorId = Math.floor(Math.random() * (4));
 
+  let userObj = {
+    username: user,
+    color: colorId,
+    socket: socketId
+  };
+  
   let userData = JSON.stringify(userObj);
 
-  socket.emit('user_join', {
-    name: user,
-    id: socket.id
-  });
+  socket.emit('user_join', { userData });
 
-  users.set(socket.id, user)
+  console.log(userData);
+  users.set(socket.id, userObj);
 
   fetch(`${config.apiBaseUrl}api/user/create`, {
     method: 'POST',
@@ -241,10 +242,11 @@ function preload() {
     let newMap = await new Map(JSON.parse(userArr));
     console.log(`receive a new user map from socket`);
     users = newMap;
-    activeUsers= [];
-    users.values().forEach((username, i) => {
+    activeUsers = [];
+    users.values().forEach((user, i) => {
+      console.log(`this is the color id${user.color}`)
       const x = width - (i + 1) * (40 + 15);
-      activeUsers.push(new activeUser(username, x))
+      activeUsers.push(new activeUser(user.username, x, user.color));
     });
     console.log(users);
    });
@@ -571,14 +573,18 @@ function draw() {
       if (creatorName.value() == "") {
         hasNameInput = false
       } else {
-        createUser(creatorName.value());
+        createUser(creatorName.value(), socket.id);
+
+        console.log(users)
 
         //create active users
-        users.values().forEach((username, i) => {
+        users.values().forEach((user, i) => {
+          // const userData = JSON.parse(user);
+          // console.log(userData)
           const x = width - (i + 1) * (40 + 15);
-          activeUsers.push(new activeUser(username, x))
+          activeUsers.push(new activeUser(user.username, x, user.color));
         });
-
+        
         hasNameInput = true
         mouseIsPressed = false
         mode = 1

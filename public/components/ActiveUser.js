@@ -1,12 +1,15 @@
+const colors = ["#d3ff8a", "#FDBCBC", "#FFC978", "#99D4FF", "#E7B3FF"];
+
 class activeUser {
-    constructor(username, x) {
+    constructor(username, x, colorId) {
         this.x = x
         this.size = 40
-        this.color = random(["#d3ff8a", "#FDBCBC", "#FFC978", "#99D4FF", "#E7B3FF"])
+        this.color = colors[colorId]
         // this.initial = username.value().charAt(0)
         this.initial = username.charAt(0).toUpperCase()
 
     }
+
     display() {
         push()
         stroke("#afafaf")
