@@ -77,7 +77,7 @@ app.get("/api/rooms", async (req, res) => {
 
 app.post("/api/user/create", async (req, res) => {
     try {
-        console.log(req.body.color);
+        // console.log(req.body.color);
         const user = new User({
             username: sanitize(req.body.username),
             color: sanitize(req.body.color)
@@ -123,7 +123,6 @@ app.get("/api/layers", async (req, res) => {
 });
 
 app.get("/api/track", (req, res) => {
-    console.log(users.size)
     try {
         if(currentSong === -1 || users.size === 0) {
             return res.status(200).json({ message: 'No current song playing'});
@@ -184,10 +183,8 @@ io.sockets.on('connection', function(socket) {
 
     // remove from map
     socket.on('disconnect', function() {
-        console.log(socket.id);
         users.delete(socket.id);
         let userArr = JSON.stringify(Array.from(users));
-        console.log(users);
         socket.broadcast.emit('user_join', userArr);
     });
 
@@ -206,7 +203,6 @@ io.sockets.on('connection', function(socket) {
     socket.on('user_join', function(user) {
         const userObj = JSON.parse(user.userData)
         users.set(userObj.socket, userObj);
-        console.log(users);
         const userArr = JSON.stringify(Array.from(users))
         socket.broadcast.emit('user_join', userArr);
     });

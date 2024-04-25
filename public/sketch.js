@@ -116,7 +116,6 @@ function createUser(user, socketId) {
 
   socket.emit('user_join', { userData });
 
-  console.log(userData);
   users.set(socket.id, userObj);
 
   fetch(`${config.apiBaseUrl}api/user/create`, {
@@ -206,7 +205,7 @@ function getPrevLayers() {
 
 async function setPrevLayers() {
   const prevLayers = await getPrevLayers();
-  console.log(prevLayers);
+  // console.log(prevLayers);
   prevLayers.forEach((layer) => {
     temp = createGraphics(width + gridSize, height + gridSize)
     const layerAtrs = layer.layerAttributes;
@@ -232,7 +231,7 @@ function preload() {
    // listen for any new users that may have joined
    socket.on('new_user', function (message) {
      console.log("A new user has joined!");
-     console.log(message);
+    //  console.log(message);
  
      // store the newly joined user in our object
      users[message.id] = message;
@@ -240,21 +239,19 @@ function preload() {
  
    socket.on('user_join', async function(userArr) {
     let newMap = await new Map(JSON.parse(userArr));
-    console.log(`receive a new user map from socket`);
     users = newMap;
     activeUsers = [];
     users.values().forEach((user, i) => {
-      console.log(`this is the color id${user.color}`)
       const x = width - (i + 1) * (40 + 15);
       activeUsers.push(new activeUser(user.username, x, user.color));
     });
-    console.log(users);
+    // console.log(users);
    });
 
      // TODO: listen for all previous users
      socket.on('all_previous_users', function(message) {
        console.log("Got all previous users!");
-       console.log(message);
+      //  console.log(message);
  
      // store these users
      for (let id in message) {
@@ -348,8 +345,8 @@ function preload() {
  
    // listen for text resize
    socket.on('text_resize', function(msg) {
-     console.log("A text is being resized");
-     console.log(msg);
+    //  console.log("A text is being resized");
+    //  console.log(msg);
  
      // update the layer in our layers map
      let layer = layers.get(msg.id);
@@ -358,8 +355,8 @@ function preload() {
  
    // listen for text border resize
    socket.on('text_border_resize', function(msg) {
-     console.log("A text border is being resized");
-     console.log(msg);
+    //  console.log("A text border is being resized");
+    //  console.log(msg);
  
      let layer = layers.get(msg.id);
      layer.content.w = msg.w;
@@ -368,8 +365,8 @@ function preload() {
  
    // listen for movement of layers: need keyvalue, x, y
    socket.on('move_layer', function (msg) {
-     console.log("a layer is being moved");
-     console.log(msg);
+    //  console.log("a layer is being moved");
+    //  console.log(msg);
  
      // update the layer in our layers map
      let layer = layers.get(msg.id);
@@ -379,8 +376,8 @@ function preload() {
  
    // listen for resizing of layers: need keyvalue, s
    socket.on('resize_layer', function(msg) {
-     console.log("a layer is being resized");
-     console.log(msg);
+    //  console.log("a layer is being resized");
+    //  console.log(msg);
  
      // update the layer in our layers map
      let layer = layers.get(msg.id);
@@ -389,8 +386,8 @@ function preload() {
  
    // listen for color changes of layers
    socket.on('change_color_layer', function(msg) {
-     console.log("a layer is being changed color");
-     console.log(msg);
+    //  console.log("a layer is being changed color");
+    //  console.log(msg);
  
      // update the layer in our layers map
      let layer = layers.get(msg.id);
@@ -399,8 +396,8 @@ function preload() {
    
    // listen for layer deletions
    socket.on('delete_layer', function(msg) {
-     console.log("a layer is being deleted");
-     console.log(msg);
+    //  console.log("a layer is being deleted");
+    //  console.log(msg);
  
      // delete the layer from our layers map
      layers.delete(msg.id);
@@ -408,22 +405,22 @@ function preload() {
  
    // listen for text edits
    socket.on('change_text', function(msg) {
-     console.log("a text is being edited");
-     console.log(msg);
+    //  console.log("a text is being edited");
+    //  console.log(msg);
      layers.get(msg.id).content.txt = msg.txt;
    });
  
    // listen for weight changes
    socket.on('change_weight', function(msg) {
-     console.log("a weight is being changed");
-     console.log(msg);
+    //  console.log("a weight is being changed");
+    //  console.log(msg);
      layers.get(msg.id).content.wt = msg.wt;
    });
  
    // listen for line movements
    socket.on('move_line', function(msg) {
-     console.log("a line is being moved");
-     console.log(msg);
+    //  console.log("a line is being moved");
+    //  console.log(msg);
      let layer = layers.get(msg.id);
      layer.content.x1 = msg.x1;
      layer.content.y1 = msg.y1;
@@ -575,7 +572,7 @@ function draw() {
       } else {
         createUser(creatorName.value(), socket.id);
 
-        console.log(users)
+        // console.log(users)
 
         //create active users
         users.values().forEach((user, i) => {
