@@ -16,13 +16,8 @@ The application will store the layers created on the canvas - allowing for resto
 
 * Layers contain all attributes needed to render onto clients' canvases
   * uniqueID: generated uuid -> `String`
-  * graphicType: Sticky, Line, Shape, Sticker, Text -> `String`
-  * x: x position on the canvas -> `Number`
-  * y: y position on the canvas -> `Number`
-  * s: scale of the layer -> `Number`
+  * layerAttributes: all layer properties needed for rendering -> `String`
   * author: who created the layer -> `String`
-  * text (optional): for text layer type -> `String`
-  * color (optional): rgb value of color -> `String`
   * ...
 * Each layer in the database should be dynamically deleted/added depending on client interaction
 
@@ -30,14 +25,29 @@ An Example Layer:
 
 ```javascript
 {
-  uniqueID: "5bf1afbb-8765-4ce7-b0c9-8fd337cc93ae",
-  graphicType: "Sticky",
-  x: 43.983,
-  y: 10.024,
-  s: 2.051,
-  author: "Joshua Le",
-  text: "Hello JigJamers!",
-  color: "rgb(178,34,34)"
+  "uniqueID": "1713795863261",
+  "graphicType": "line",
+  "layerAttributes": {
+    "col": 6,
+    "x1": 373,
+    "y1": 609,
+    "x2": 579.5,
+    "y2": 501,
+    "wt": 6
+  },
+  "author": "newuser298",
+  "createdAt": "2024-04-22T14:24:23.340Z",
+  "updatedAt": "2024-04-25T04:51:15.967Z",
+  "__v": 0
+}
+```
+
+An Example User:
+```javascript
+{
+  "username": "ethan",
+  "color": "testing red",
+  "__v": 0
 }
 ```
 
@@ -135,6 +145,16 @@ https://github.com/joshle298/JigJam/assets/59464508/284c4ccc-c9a1-4415-a7ee-0211
 When looking at ways to optimize the websocket server's performance, I came across a replacement module, [eiows](https://socket.io/docs/v3/server-installation/). However, after installing and deploying to my server, I realized that such implementations are either deprecated or not supported as much as socket.io's default, `ws`. Other ways I am planning to optimize the server is through [performance tuning](https://socket.io/docs/v4/performance-tuning/), where I can install `ws` native add-ons such as [bufferutil](https://www.npmjs.com/package/bufferutil) and [utf-8-validate](https://www.npmjs.com/package/utf-8-validate). Though not necessary, if for some reason JigJam reaches a substantial amount of live users at a given time, using [sticky load balancing](https://socket.io/docs/v4/using-multiple-nodes#using-nodejs-cluster) would be advantageous, which can be implemented in the next iteration.
 
 # 🏁 Project Submission
+
+## AJAX Interaction 3 - Live User Joins/Leaves in Current Sessions
+
+https://github.com/joshle298/JigJam/assets/59464508/9625aed4-8cf7-4556-bb26-586e14917e17
+
+## AJAX Interaction 4 - Song Sync Across Live Users
+
+https://github.com/joshle298/JigJam/assets/59464508/a36b6787-3c7d-48d5-88e3-7f097eca96bc
+
+Current song playing API can be accessed [here](https://jigjam.live/api/track)
 
 ## Research Topics (Complete)
 
