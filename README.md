@@ -170,9 +170,9 @@ When looking at ways to optimize the websocket server's performance, I came acro
 - [ ] Save state for all tools (only line implemented - weights)
 - [ ] Multi-Canvas experience
 - [ ] Google-authentication login for users
-- [ ] # of users in canvas and who
+- [x] # of users in canvas and who
 - [ ] Live cursor tracking
-- [ ] Storing the current state of canvases for new users
+- [x] Storing the current state of canvases for new users
 - [ ] More tools!
 - [ ] Commenting
 - [ ] And so much more!!
